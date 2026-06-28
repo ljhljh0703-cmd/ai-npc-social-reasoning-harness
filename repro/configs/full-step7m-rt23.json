@@ -1,0 +1,64 @@
+{
+  "meta": {
+    "experiment_name": "abl_7p",
+    "condition": "full-step7m-rt23",
+    "ruleset": "werewolf",
+    "hypothesis": "RT2.3 baseline. RT2 추론 프롬프트는 유지하고 런타임 공개 발화 위생 필터만 적용한다.",
+    "notes": "RT2.2의 과도한 프롬프트 억제로 성능이 하락했으므로, RT2 구조를 유지한 채 발화 누출만 안전문으로 치환한다."
+  },
+  "game": {
+    "num_players": 7,
+    "max_days": 10,
+    "discussion_turns": 2,
+    "wolf_win_ratio": 1.0,
+    "reveal_role_on_death": true,
+    "vote_fallback": "random"
+  },
+  "ablation": {
+    "arm": "full-step7m-rt23",
+    "use_memory": true,
+    "use_experience": true,
+    "use_info": true
+  },
+  "prompt": {
+    "reason_and_act": "reason_and_act_step7m_rt2.txt",
+    "public_hygiene_filter": true,
+    "public_hygiene_max_chars": 120
+  },
+  "roles": {
+    "늑대": {
+      "enabled": true,
+      "count": 2,
+      "params": {}
+    },
+    "시민": {
+      "enabled": true,
+      "count": 2,
+      "params": {}
+    },
+    "예언자": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "reveal_publicly": false
+      }
+    },
+    "가드": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "can_self_protect": false,
+        "repeat_target": false
+      }
+    },
+    "마녀": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "heal_potions": 1,
+        "poison_potions": 1,
+        "can_heal_self": true
+      }
+    }
+  }
+}

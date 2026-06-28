@@ -1,0 +1,78 @@
+{
+  "meta": {
+    "experiment_name": "abl_7p",
+    "condition": "full-village-scaffold-step7m-rt23",
+    "ruleset": "werewolf",
+    "hypothesis": "RT2.3 scaffold arm. RT2 scaffold의 성능 방향을 유지하면서 런타임 공개 발화 위생 필터로 raw 품질통과를 개선하는지 확인한다.",
+    "notes": "N=5에서 성능 악화 없이 품질통과와 replacement가 개선되면 N=20 후보로 삼는다."
+  },
+  "game": {
+    "num_players": 7,
+    "max_days": 10,
+    "discussion_turns": 2,
+    "wolf_win_ratio": 1.0,
+    "reveal_role_on_death": true,
+    "vote_fallback": "random"
+  },
+  "ablation": {
+    "arm": "full+village-scaffold-step7m-rt23",
+    "use_memory": true,
+    "use_experience": true,
+    "use_info": true
+  },
+  "prompt": {
+    "reason_and_act": "reason_and_act_step7m_rt2.txt",
+    "public_hygiene_filter": true,
+    "public_hygiene_max_chars": 120
+  },
+  "scaffold": {
+    "enabled": true,
+    "name": "interdisciplinary_rt2",
+    "apply_to_camps": [
+      "village"
+    ],
+    "behavior_contract": {
+      "target_count": 1,
+      "public_evidence_count": 1,
+      "avoid_repeat_question": true,
+      "avoid_role_terms": true,
+      "check_bandwagon_beneficiary": true
+    }
+  },
+  "roles": {
+    "늑대": {
+      "enabled": true,
+      "count": 2,
+      "params": {}
+    },
+    "시민": {
+      "enabled": true,
+      "count": 2,
+      "params": {}
+    },
+    "예언자": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "reveal_publicly": false
+      }
+    },
+    "가드": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "can_self_protect": false,
+        "repeat_target": false
+      }
+    },
+    "마녀": {
+      "enabled": true,
+      "count": 1,
+      "params": {
+        "heal_potions": 1,
+        "poison_potions": 1,
+        "can_heal_self": true
+      }
+    }
+  }
+}

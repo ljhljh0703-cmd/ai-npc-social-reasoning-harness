@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 마피아 사회적 추론 시뮬레이터</title>
+    <meta
+      name="description"
+      content="STEP7-M 대표 기록 예시와 fixture 분기표를 탑다운 픽셀 마을에서 재생하는 AI 마피아 사회적 추론 데모."
+    />
+    <meta property="og:title" content="AI 마피아 사회적 추론 시뮬레이터" />
+    <meta
+      property="og:description"
+      content="발표자 모드, 관람 모드, 4축 분석 슬라이더, 로그 다운로드를 갖춘 브라우저 기반 시각 데모."
+    />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="title-block">
+          <strong>AI 마피아 사회적 추론 시뮬레이터</strong>
+          <span id="data-badge">fixture harness</span>
+        </div>
+
+        <div class="toolbar-group" aria-label="데이터 소스">
+          <button class="segmented" id="source-fixture" type="button">Fixture</button>
+          <button class="segmented is-active" id="source-real" type="button">기록</button>
+        </div>
+
+        <div class="toolbar-group" aria-label="AI 모드">
+          <button class="segmented" id="mode-baseline" type="button">순정 AI</button>
+          <button class="segmented is-active" id="mode-scaffold" type="button">스캐폴드</button>
+        </div>
+
+        <div class="toolbar-group" aria-label="관람 모드">
+          <button class="segmented is-active" id="view-presenter" type="button">발표자</button>
+          <button class="segmented" id="view-viewer" type="button">관람</button>
+        </div>
+
+        <div class="speed-control">
+          <img src="assets/icons/speed.png" alt="" />
+          <span>속도</span>
+          <input id="speed-range" type="range" min="0.5" max="3" value="1.4" step="0.1" />
+          <output id="speed-label">1.4x</output>
+        </div>
+
+        <div class="toolbar-actions">
+          <button class="icon-button" id="play-toggle" type="button" title="재생/일시정지">
+            <img src="assets/icons/pause.png" alt="" />
+          </button>
+          <button class="text-button" id="reset-run" type="button">처음</button>
+          <a class="text-button with-icon" href="report.html" target="_blank" rel="noreferrer">
+            <img src="assets/icons/report.png" alt="" />
+            리포트
+          </a>
+          <button class="text-button with-icon" id="download-log" type="button" title="로그 다운로드">
+            <img src="assets/icons/download.png" alt="" />
+            로그
+          </button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="left-rail" aria-label="스캐폴드 파라미터">
+          <div class="rail-title">4축 분석 슬라이더</div>
+          <div id="axis-sliders" class="axis-sliders"></div>
+          <div class="branch-panel">
+            <span>현재 분기</span>
+            <strong id="branch-badge">고강도 스캐폴드</strong>
+          </div>
+          <p class="fixture-note">
+            Fixture는 구조 검증용이다. 기록 예시는 STEP7-M RT2.3 seed 58 scaffold run의 game_history를 사건 축으로 재현한다.
+          </p>
+        </section>
+
+        <section class="stage-wrap" aria-label="시뮬레이션 화면">
+          <div id="phaser-root"></div>
+          <div class="stage-hud">
+            <div>
+              <span id="phase-label">역할 배정</span>
+              <strong id="step-counter">1 / 13</strong>
+            </div>
+            <p id="event-text"></p>
+            <div id="event-labels" class="label-row"></div>
+          </div>
+          <div id="vote-panel" class="floating-panel is-hidden">
+            <div class="panel-title">투표 결과</div>
+            <div id="vote-list"></div>
+          </div>
+          <div id="night-panel" class="floating-panel night-panel is-hidden">
+            <div class="panel-title">밤 행동</div>
+            <div id="night-list"></div>
+          </div>
+        </section>
+
+        <aside class="right-rail" aria-label="NPC 상태창">
+          <div class="npc-header">
+            <div>
+              <span>선택 NPC</span>
+              <strong id="npc-name">민준</strong>
+            </div>
+            <img id="npc-portrait" src="assets/characters/player_1_pose_1.png" alt="" />
+          </div>
+          <div class="npc-facts">
+            <div>
+              <span>역할</span>
+              <strong id="npc-role">시민</strong>
+            </div>
+            <div>
+              <span>성향</span>
+              <strong id="npc-tone">차분한 기록자</strong>
+            </div>
+          </div>
+          <section class="thought-box" aria-label="상태 요약">
+            <div class="thought-title">
+              <span class="panel-title">표시용 상태 요약</span>
+              <span class="private-chip">발표자 모드</span>
+            </div>
+            <p id="npc-thought"></p>
+            <button id="thought-toggle" class="inline-button" type="button">상세 근거 펼치기</button>
+          </section>
+          <div class="npc-tabs" role="tablist" aria-label="NPC 세부 정보">
+            <button class="npc-tab is-active" id="npc-tab-relation" type="button" role="tab" aria-selected="true" data-npc-tab="relation">관계망</button>
+            <button class="npc-tab" id="npc-tab-evidence" type="button" role="tab" aria-selected="false" data-npc-tab="evidence">근거</button>
+          </div>
+          <section class="relation-section npc-tab-panel" id="npc-panel-relation" role="tabpanel" aria-labelledby="npc-tab-relation">
+            <div class="panel-title">클릭한 NPC 중심 관계망</div>
+            <div id="relationship-map" class="relationship-map"></div>
+          </section>
+          <section class="evidence-section npc-tab-panel is-hidden" id="npc-panel-evidence" role="tabpanel" aria-labelledby="npc-tab-evidence">
+            <div class="panel-title">의심 근거</div>
+            <div id="npc-evidence-list" class="evidence-list"></div>
+          </section>
+        </aside>
+      </main>
+
+      <footer class="event-log-wrap">
+        <div class="log-head">
+          <div>
+            <strong>리플레이 로그</strong>
+            <span>고정된 실험 기록과 데모 분기표를 재생한다. 실시간 LLM 재계산은 하지 않는다.</span>
+          </div>
+          <button class="inline-button" id="log-toggle" type="button" aria-expanded="false">펼치기</button>
+        </div>
+        <div id="event-log" class="event-log"></div>
+      </footer>
+    </div>
+
+    <script src="vendor/phaser.min.js"></script>
+    <script src="demo-data.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

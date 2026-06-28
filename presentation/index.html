@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI NPC 사회추론 평가 하네스</title>
+  <meta name="description" content="7인 늑대인간 환경에서 LLM NPC의 사회추론을 반복 평가하고 raw 성능과 발화 품질을 분리해 측정한 최종 발표자료.">
+  <meta property="og:title" content="AI NPC 사회추론 평가 하네스">
+  <meta property="og:description" content="RT2.3 N=20 기준 품질 통제 상태의 탐색적 양의 경향과 발표용 데모 연결.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#s01">AI NPC 사회추론 평가 하네스</a>
+    <nav aria-label="발표 슬라이드">
+      <a href="#s02">문제</a>
+      <a href="#s05">지표</a>
+      <a href="#s08">결과</a>
+      <a href="#s10">데모</a>
+      <a href="#s12">결론</a>
+    </nav>
+  </header>
+
+  <main class="deck">
+    <section class="slide title-slide" id="s01">
+      <div class="slide-kicker">최종 발표 자료</div>
+      <h1>LLM NPC의 사회추론을 어떻게 검증할 것인가</h1>
+      <p class="lead">7인 늑대인간 게임을 규칙 기반 사회추론 평가 환경으로 구성하고, 승률·역할추론·투표정합성·발화 품질을 분리해 측정했다.</p>
+      <div class="hero-grid">
+        <div class="hero-card">
+          <span class="metric-value">RT2.3</span>
+          <span class="metric-label">최종 후보 실험</span>
+        </div>
+        <div class="hero-card">
+          <span class="metric-value">N=20</span>
+          <span class="metric-label">동일 seed 비교</span>
+        </div>
+        <div class="hero-card">
+          <span class="metric-value">20/20</span>
+          <span class="metric-label">raw 품질통과</span>
+        </div>
+      </div>
+      <p class="claim safe">강한 개선 결론이 아니라, 품질 통제 상태의 탐색적 양의 경향으로 보고한다.</p>
+    </section>
+
+    <section class="slide" id="s02">
+      <div class="slide-kicker">문제</div>
+      <h2>자연스러운 발화와 실제 사회추론은 다르다</h2>
+      <div class="two-col">
+        <div>
+          <h3>겉으로 보이는 것</h3>
+          <ul>
+            <li>NPC가 그럴듯한 한국어 대화를 한다.</li>
+            <li>의심, 방어, 설득처럼 보이는 문장을 만든다.</li>
+            <li>플레이어는 쉽게 "추론하고 있다"고 느낀다.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>검증해야 하는 것</h3>
+          <ul>
+            <li>그 발화가 실제 역할추론으로 이어졌는가.</li>
+            <li>투표가 공개 단서와 연결됐는가.</li>
+            <li>발화 품질 문제가 성능 해석을 오염시키지 않았는가.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">따라서 데모가 아니라 반복 실험 가능한 평가 하네스가 필요했다.</p>
+    </section>
+
+    <section class="slide" id="s03">
+      <div class="slide-kicker">환경</div>
+      <h2>7인 늑대인간을 사회추론 평가 환경으로 재구성</h2>
+      <div class="role-row">
+        <div class="role-token wolf">늑대 2</div>
+        <div class="role-token">시민 2</div>
+        <div class="role-token">예언자 1</div>
+        <div class="role-token">가드 1</div>
+        <div class="role-token">마녀 1</div>
+      </div>
+      <div class="flow">
+        <span>역할 배정</span>
+        <span>밤 행동</span>
+        <span>낮 토론</span>
+        <span>투표</span>
+        <span>승패 판정</span>
+      </div>
+      <p class="lead small">비공개 역할, 기만, 공개 토론, 집단 투표가 함께 존재하기 때문에 단순 대화보다 역할추론과 의사결정을 직접 평가하기 좋다.</p>
+    </section>
+
+    <section class="slide" id="s04">
+      <div class="slide-kicker">시스템</div>
+      <h2>실험 가능한 NPC 실행 구조</h2>
+      <div class="system-grid">
+        <div class="system-node">Memory<br><small>장기 기억과 사건 회상</small></div>
+        <div class="system-node">Experience<br><small>이전 게임 경험</small></div>
+        <div class="system-node">Info<br><small>역할·룰 정보</small></div>
+        <div class="system-node highlight">Scaffold<br><small>발화·여론·수혜자·심문</small></div>
+        <div class="system-node">Runner<br><small>seed/config 기반 반복 실행</small></div>
+        <div class="system-node">Logger<br><small>raw run JSON 보존</small></div>
+      </div>
+      <p class="note">실험의 핵심은 "NPC를 더 말 잘하게 만들기"가 아니라, 같은 조건에서 반복 비교할 수 있게 통제하는 것이다.</p>
+    </section>
+
+    <section class="slide" id="s05">
+      <div class="slide-kicker">지표</div>
+      <h2>raw 성능과 발화 품질을 분리했다</h2>
+      <div class="three-col">
+        <div class="metric-box">
+          <h3>성능 지표</h3>
+          <p>원본 run의 game metrics 기준.</p>
+          <ul>
+            <li>마을승률</li>
+            <li>역할추론</li>
+            <li>투표정합성</li>
+            <li>평균 지속일</li>
+          </ul>
+        </div>
+        <div class="metric-box">
+          <h3>과정 지표</h3>
+          <p>왜 그런 결과가 나왔는지 설명.</p>
+          <ul>
+            <li>단서 전환</li>
+            <li>follow-up</li>
+            <li>핵심직 오인</li>
+            <li>늑대 가담 무고 처형</li>
+          </ul>
+        </div>
+        <div class="metric-box">
+          <h3>품질 지표</h3>
+          <p>공개 발화의 안전성과 가독성.</p>
+          <ul>
+            <li>scaffold leak</li>
+            <li>thought leak</li>
+            <li>role ability leak</li>
+            <li>overlong / non-Korean</li>
+          </ul>
+        </div>
+      </div>
+      <p class="claim">sanitized 결과로 성능을 계산하지 않는다.</p>
+    </section>
+
+    <section class="slide" id="s06">
+      <div class="slide-kicker">개입</div>
+      <h2>인문학·사회과학·게임이론 기반 scaffold</h2>
+      <div class="slider-grid">
+        <div>
+          <h3>발화 분석</h3>
+          <p>말의 앞뒤, 회피, 말과 투표의 불일치를 본다.</p>
+        </div>
+        <div>
+          <h3>여론 분석</h3>
+          <p>몰아가기, 빠른 동조, 희생양 패턴을 본다.</p>
+        </div>
+        <div>
+          <h3>수혜자 분석</h3>
+          <p>이 흐름으로 누가 이득을 보는지 묻는다.</p>
+        </div>
+        <div>
+          <h3>심문 전략</h3>
+          <p>즉시 몰기보다 질문, 유예, follow-up을 선택한다.</p>
+        </div>
+      </div>
+      <p class="note">scaffold는 정답을 주는 장치가 아니라, 공개 발화와 투표 흐름에서 의심 단서를 추적하도록 유도하는 장치다.</p>
+    </section>
+
+    <section class="slide" id="s07">
+      <div class="slide-kicker">RT2</div>
+      <h2>지표 상승과 품질 비용이 함께 나타났다</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>arm</th>
+            <th>N</th>
+            <th>마을승률</th>
+            <th>역할추론</th>
+            <th>투표정합성</th>
+            <th>raw 품질통과</th>
+            <th>replacements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>full-step7m-rt2</td>
+            <td>20</td>
+            <td>0.200</td>
+            <td>0.267</td>
+            <td>0.343</td>
+            <td>14/20</td>
+            <td>16</td>
+          </tr>
+          <tr>
+            <td>scaffold-rt2</td>
+            <td>20</td>
+            <td>0.350</td>
+            <td>0.467</td>
+            <td>0.371</td>
+            <td>10/20</td>
+            <td>26</td>
+          </tr>
+          <tr class="delta">
+            <td>delta</td>
+            <td>-</td>
+            <td>+0.150</td>
+            <td>+0.200</td>
+            <td>+0.028</td>
+            <td>-4</td>
+            <td>+10</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="claim warn">일부 지표는 상승했지만 발화 품질 비용 때문에 강한 claim은 불가하다.</p>
+    </section>
+
+    <section class="slide" id="s08">
+      <div class="slide-kicker">RT2.3</div>
+      <h2>품질 통제 상태의 양의 경향</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>arm</th>
+            <th>N</th>
+            <th>마을승률</th>
+            <th>역할추론</th>
+            <th>투표정합성</th>
+            <th>평균 지속일</th>
+            <th>raw 품질통과</th>
+            <th>replacements</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>full-step7m-rt23</td>
+            <td>20</td>
+            <td>0.200</td>
+            <td>0.317</td>
+            <td>0.334</td>
+            <td>2.000</td>
+            <td>20/20</td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>scaffold-rt23</td>
+            <td>20</td>
+            <td>0.300</td>
+            <td>0.383</td>
+            <td>0.353</td>
+            <td>2.150</td>
+            <td>20/20</td>
+            <td>0</td>
+          </tr>
+          <tr class="delta">
+            <td>delta</td>
+            <td>-</td>
+            <td>+0.100</td>
+            <td>+0.066</td>
+            <td>+0.019</td>
+            <td>+0.150</td>
+            <td>+0</td>
+            <td>+0</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="claim safe">품질 gate는 통과했고 주요 지표는 양의 방향이다. 단, 효과크기는 작고 역할추론 +0.10 gate에는 미달했다.</p>
+    </section>
+
+    <section class="slide" id="s09">
+      <div class="slide-kicker">대표 Run</div>
+      <h2>seed 58 설명용 사례</h2>
+      <div class="compare-grid">
+        <div class="compare-card baseline">
+          <h3>순정 AI</h3>
+          <p class="big-result">늑대 승리</p>
+          <ul>
+            <li>Day 1: 준서 처형, 실제 늑대.</li>
+            <li>Day 2: 수아 처형, 실제 예언자.</li>
+            <li>역할추론 0.500, 투표정합성 0.444.</li>
+          </ul>
+        </div>
+        <div class="compare-card scaffold">
+          <h3>마을 스캐폴드</h3>
+          <p class="big-result">마을 승리</p>
+          <ul>
+            <li>Day 1: 준서 처형, 실제 늑대.</li>
+            <li>Day 2: 지호 처형, 실제 늑대.</li>
+            <li>역할추론 1.000, 투표정합성 0.750.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note">단일 대표 run은 설명용 사례이며, 전체 성능 판단은 RT2.3 N=20 표를 기준으로 한다.</p>
+    </section>
+
+    <section class="slide" id="s10">
+      <div class="slide-kicker">데모</div>
+      <h2>Phaser 기반 발표용 시뮬레이션</h2>
+      <div class="demo-links">
+        <a class="button primary" href="../demo/index.html">데모 열기</a>
+        <a class="button" href="../demo/report.html">리포트 열기</a>
+      </div>
+      <div class="two-col">
+        <div>
+          <h3>데모에서 보여줄 것</h3>
+          <ul>
+            <li>7인 픽셀 마을 시뮬레이션.</li>
+            <li>순정 AI와 마을 스캐폴드 모드.</li>
+            <li>발표자 모드와 관람 모드.</li>
+            <li>4축 슬라이더와 로그 다운로드.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>리포트에서 확인할 것</h3>
+          <ul>
+            <li>raw 성능표.</li>
+            <li>품질 지표표.</li>
+            <li>대표 run 출처.</li>
+            <li>claim disclaimer.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide" id="s11">
+      <div class="slide-kicker">확장</div>
+      <h2>GitHub와 논문으로 이어지는 구조</h2>
+      <div class="two-col">
+        <div>
+          <h3>GitHub 공개 패키지</h3>
+          <ul>
+            <li>데모 prototype.</li>
+            <li>최종 발표 HTML.</li>
+            <li>최종보고서 Markdown/PDF.</li>
+            <li>재현성 안내와 공개용 README.</li>
+          </ul>
+          <p class="status-chip">상태: 선별 준비 중</p>
+        </div>
+        <div>
+          <h3>논문 초안</h3>
+          <ul>
+            <li>Related Work 10편 후보.</li>
+            <li>Werewolf Arena, Generative Agents, ReAct/CoT 비교.</li>
+            <li>Method/Reproducibility 강화.</li>
+            <li>한계와 후속 검증 명시.</li>
+          </ul>
+          <p class="status-chip">상태: Section C 작성 중</p>
+        </div>
+      </div>
+      <p class="note">GitHub README와 논문 초안은 같은 claim gate를 공유해야 한다.</p>
+    </section>
+
+    <section class="slide conclusion" id="s12">
+      <div class="slide-kicker">결론</div>
+      <h2>이번 성과는 "더 잘 이겼다"보다 "검증 가능해졌다"에 있다</h2>
+      <div class="conclusion-stack">
+        <p>LLM NPC의 사회추론을 규칙 기반 게임 환경에서 반복 측정할 수 있게 만들었다.</p>
+        <p>성능 지표와 발화 품질 지표를 분리해 claim을 통제했다.</p>
+      <p>RT2.3 N=20에서 scaffold는 품질 통제 상태로 주요 지표의 양의 방향이 관찰됐다.</p>
+      </div>
+      <p class="claim final">강한 개선 결론은 보류하며, 후속 N 확장과 다른 모델 재현이 필요하다.</p>
+      <div class="footer-actions">
+        <a href="#s01">처음으로</a>
+        <a href="../demo/index.html">데모</a>
+        <a href="../demo/report.html">리포트</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI 마피아 데모 리포트</title>
+    <meta
+      name="description"
+      content="AI 마피아 사회적 추론 데모의 claim gate, 데모 분기표, STEP7-M 대표 기록 예시, 데이터 경계를 정리한 보고서."
+    />
+    <meta property="og:title" content="AI 마피아 데모 리포트" />
+    <meta
+      property="og:description"
+      content="데모 지표와 실제 기록 예시를 분리하고, 발표에서 허용 가능한 claim 범위를 명시한다."
+    />
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="report-page">
+    <div class="report-wrap">
+      <header class="report-header">
+        <div>
+          <h1>AI 마피아 데모 리포트</h1>
+          <p>
+            데모 분기표와 STEP7-M RT2.3 seed 58 대표 기록 예시를 함께 보여주는 발표용 요약이다.
+            데모 분기표는 구조 검증용이며, 기록 예시는 설명용 display replay다.
+          </p>
+        </div>
+        <div class="toolbar-actions">
+          <a class="text-button with-icon" href="index.html">
+            <img src="assets/icons/play.png" alt="" />
+            시뮬레이터
+          </a>
+          <button class="text-button with-icon" id="download-report-log" type="button">
+            <img src="assets/icons/download.png" alt="" />
+            데모 JSON
+          </button>
+        </div>
+      </header>
+
+      <main class="report-grid">
+        <section class="report-section wide">
+          <h2>Claim Gate</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>허용 문장</th>
+                <th>잠금 문장</th>
+                <th>현재 데이터 상태</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  품질 통제 상태의 탐색적 양의 경향. 대표 run은 설명용 사례이며, 성능 판단은
+                  RT2.3 N=20 표를 기준으로 한다.
+                </td>
+                <td>
+                  강한 개선 결론, 단일 run 기반 전체 효과 주장, sanitized 표시본을 성능 근거로
+                  연결하는 표현은 금지.
+                </td>
+                <td id="source-status"></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="report-section wide">
+          <h2>RT2.3 N=20 최종 결과표</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>arm</th>
+                <th>N</th>
+                <th>마을승률</th>
+                <th>역할추론</th>
+                <th>투표정합성</th>
+                <th>raw 품질통과</th>
+                <th>replacements</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>full-step7m-rt23</td>
+                <td>20</td>
+                <td>0.200</td>
+                <td>0.317</td>
+                <td>0.334</td>
+                <td>20/20</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>full-village-scaffold-step7m-rt23</td>
+                <td>20</td>
+                <td>0.300</td>
+                <td>0.383</td>
+                <td>0.353</td>
+                <td>20/20</td>
+                <td>0</td>
+              </tr>
+              <tr>
+                <td>delta</td>
+                <td>-</td>
+                <td>+0.100</td>
+                <td>+0.066</td>
+                <td>+0.019</td>
+                <td>+0</td>
+                <td>+0</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="fixture-note">
+            sanitized 결과는 표시용 품질 보정이며, raw 성능 지표를 재계산하지 않는다.
+            대표 run seed 58은 설명용 사례이며, 성능 판단은 RT2.3 N=20 표를 기준으로 한다.
+          </p>
+        </section>
+
+        <section class="report-section">
+          <h2>데모 분기별 결과</h2>
+          <table id="outcome-table">
+            <thead>
+              <tr>
+                <th>분기</th>
+                <th>1일차 처형</th>
+                <th>2일차 처형</th>
+                <th>최종</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="report-section">
+          <h2>데모 관찰 지표</h2>
+          <table id="metric-table">
+            <thead>
+              <tr>
+                <th>지표</th>
+                <th>순정 AI</th>
+                <th>저강도</th>
+                <th>고강도</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="report-section wide">
+          <h2>실제 기록 예시</h2>
+          <table id="real-run-table">
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>값</th>
+                <th>주의</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="report-section wide">
+          <h2>4축 슬라이더 매핑</h2>
+          <table id="axis-table">
+            <thead>
+              <tr>
+                <th>축</th>
+                <th>계산/연출 영향</th>
+                <th>낮을 때</th>
+                <th>높을 때</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="report-section wide">
+          <h2>데모 토론/투표 흐름</h2>
+          <table id="timeline-table">
+            <thead>
+              <tr>
+                <th>단계</th>
+                <th>순정 AI</th>
+                <th>저강도 스캐폴드</th>
+                <th>고강도 스캐폴드</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+
+        <section class="report-section wide">
+          <h2>데이터 경계</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>항목</th>
+                <th>현재</th>
+                <th>해석</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>원본 로그</td>
+                <td>STEP7-M RT2.3 seed 58 scaffold와 동일 seed baseline 원본/표시본 JSON은 로컬 검증용으로만 보존한다.</td>
+                <td>브라우저 표시 payload는 display replay이며, raw 성능 지표 재계산 입력이 아니다.</td>
+              </tr>
+              <tr>
+                <td>대사</td>
+                <td>데모 대사는 연출 분기표, 기록 예시는 seed 58 run에서 선별한 표시용 대사다.</td>
+                <td>논문 근거에는 raw/sanitized 파일과 별도 라벨링 기록을 사용한다.</td>
+              </tr>
+              <tr>
+                <td>지표</td>
+                <td>데모 지표는 발표 구조 검증용 카운트다.</td>
+                <td>성능 claim은 raw run 기반 재계산과 matched-seed 비교가 있을 때만 가능하다.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </div>
+
+    <script src="demo-data.js"></script>
+    <script>
+      (function () {
+        const DATA = window.DEMO_DATA;
+        const $ = (selector) => document.querySelector(selector);
+        const playerById = new Map(DATA.players.map((player) => [player.id, player]));
+        const name = (id) => playerById.get(id)?.name || id;
+        const escapeHtml = (value) =>
+          String(value)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
+        $("#source-status").textContent = DATA.meta.sourceStatus;
+
+        const branchLabels = {
+          baseline: "순정 AI",
+          weak: "저강도 스캐폴드",
+          scaffold: "고강도 스캐폴드"
+        };
+
+        $("#outcome-table tbody").innerHTML = ["baseline", "weak", "scaffold"]
+          .map((branch) => {
+            const day1 = DATA.votes.day1[branch][0];
+            const day2 = DATA.votes.day2[branch][0];
+            return `
+              <tr>
+                <td>${branchLabels[branch]}</td>
+                <td>${escapeHtml(name(day1.target))} ${day1.count}표</td>
+                <td>${escapeHtml(name(day2.target))} ${day2.count}표</td>
+                <td>${escapeHtml(DATA.metrics[branch].final)}</td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        const metricRows = [
+          ["questions", "질문"],
+          ["deferrals", "유예 판단"],
+          ["beneficiary", "수혜자 분석"],
+          ["followup", "follow-up 추적"],
+          ["bandwagonFlags", "몰아가기 감지"],
+          ["contextDrops", "맥락 붕괴"],
+          ["clueRetention", "단서 보존"]
+        ];
+        $("#metric-table tbody").innerHTML = metricRows
+          .map(
+            ([key, label]) => `
+              <tr>
+                <td>${label}</td>
+                <td>${DATA.metrics.baseline[key]}</td>
+                <td>${DATA.metrics.weak[key]}</td>
+                <td>${DATA.metrics.scaffold[key]}</td>
+              </tr>
+            `
+          )
+          .join("");
+
+        const real = DATA.realRunExample;
+        $("#real-run-table tbody").innerHTML = [
+          ["condition", real.condition, "단일 대표 run. 전체 성능 claim 금지."],
+          ["seed", real.meta.seed, "동일 seed baseline 비교와 함께 보되, 설명용 사례로만 사용."],
+          ["winner", real.metrics.winner, "성능 판단은 RT2.3 N=20 전체 표 기준."],
+          ["days", real.metrics.days, "game_history 기준."],
+          ["role inference", real.metrics.roleInferenceAccuracy, "raw run metric. sanitized로 재계산하지 않음."],
+          ["vote consistency", real.metrics.voteConsistency, "raw run metric. 발표에서는 보조 지표."],
+          ["baseline condition", real.baselineComparison.condition, real.baselineComparison.flow],
+          [
+            "baseline metrics",
+            `winner ${real.baselineComparison.metrics.winner} / role inference ${real.baselineComparison.metrics.roleInferenceAccuracy} / vote consistency ${real.baselineComparison.metrics.voteConsistency}`,
+            "동일 seed raw run 비교."
+          ],
+          [
+            "source JSON",
+            "로컬 검증용 원본 경로와 hash는 demo-data.js에 보존. 공개 패키지에는 redacted replay manifest만 포함.",
+            "sanitized는 표시용. 성능 근거는 raw 기준."
+          ],
+          [
+            "sha256",
+            `scaffold 원본 ${real.sourceHash.rawSha256.slice(0, 12)}... / scaffold 표시본 ${real.sourceHash.sanitizedSha256.slice(0, 12)}... / baseline 원본 ${real.sourceHash.baselineRawSha256.slice(0, 12)}... / baseline 표시본 ${real.sourceHash.baselineSanitizedSha256.slice(0, 12)}...`,
+            "전체 hash는 다운로드 payload와 demo-data.js에 보존."
+          ]
+        ]
+          .map(
+            ([key, value, caution]) => `
+              <tr>
+                <td>${escapeHtml(key)}</td>
+                <td>${typeof value === "string" && value.startsWith("<a ") ? value : escapeHtml(value)}</td>
+                <td>${escapeHtml(caution)}</td>
+              </tr>
+            `
+          )
+          .join("");
+
+        const axisLowHigh = {
+          speech: ["모순 라벨이 줄고 맥락 붕괴 실패 모드가 남는다.", "발화 모순과 책임 회피를 토론 근거로 묶는다."],
+          crowd: ["침묵/인상 기반 몰이에 다시 흔들린다.", "희생양 만들기와 동조 압력을 표기한다."],
+          beneficiary: ["준서처럼 침묵으로 이득 보는 플레이어를 놓친다.", "누가 처형 흐름에서 이득을 보는지 표와 대사에 반영한다."],
+          interrogation: ["첫 질문 뒤 추적이 끊기고 2일차 투표가 흔들린다.", "질문, 유예, 핵심 역할 보호, follow-up을 연결한다."]
+        };
+        $("#axis-table tbody").innerHTML = DATA.axis
+          .map(
+            (axis) => `
+              <tr>
+                <td>${escapeHtml(axis.label)}</td>
+                <td>${escapeHtml(axis.mapping)}</td>
+                <td>${escapeHtml(axisLowHigh[axis.key][0])}</td>
+                <td>${escapeHtml(axisLowHigh[axis.key][1])}</td>
+              </tr>
+            `
+          )
+          .join("");
+
+        const important = DATA.timeline.filter((event) =>
+          ["d1-seoyeon", "d1-minjun", "vote1", "night2", "d2-minjun", "vote2", "summary"].includes(event.id)
+        );
+        $("#timeline-table tbody").innerHTML = important
+          .map(
+            (event) => `
+              <tr>
+                <td>${escapeHtml(event.phase)}</td>
+                <td>${escapeHtml(event.variants.baseline.text)}</td>
+                <td>${escapeHtml(event.variants.weak.text)}</td>
+                <td>${escapeHtml(event.variants.scaffold.text)}</td>
+              </tr>
+            `
+          )
+          .join("");
+
+        $("#download-report-log").addEventListener("click", () => {
+          const payload = {
+            payloadKind: "demo_report_display_bundle",
+            metricUse: "Display/report bundle only. Do not use this browser payload as raw experimental evidence.",
+            generatedAt: new Date().toISOString(),
+            claimGate: DATA.meta.claim,
+            data: DATA
+          };
+          const blob = new Blob([JSON.stringify(payload, null, 2)], {
+            type: "application/json;charset=utf-8"
+          });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = "ai-mafia-demo-report-display-bundle.json";
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(url);
+        });
+      })();
+    </script>
+  </body>
+</html>

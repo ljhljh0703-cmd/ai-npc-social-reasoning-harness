@@ -1,0 +1,19 @@
+.DS_Store
+node_modules/
+.env
+.venv/
+__pycache__/
+*.pyc
+
+# Keep original experiment archives private.
+*_outputs*.zip
+*archive*.zip
+*_raw_*.json
+*_sanitized_*.json
+data/
+
+# Local screenshots and recording outputs.
+*.mov
+*.mp4
+*.m4v
+screenshots/
