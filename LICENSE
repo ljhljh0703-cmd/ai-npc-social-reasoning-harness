@@ -1,0 +1,23 @@
+# Repository License Summary
+
+This repository uses a split license.
+
+## Code
+
+Source code in `demo/*.js`, `demo/*.css`, `demo/*.html`, `presentation/*.html`, `presentation/*.css`, and public-safe configuration examples in `repro/configs/` is released under the MIT License.
+
+See `LICENSE-CODE-MIT.md`.
+
+## Documentation, Reports, Presentation, and Assets
+
+Text, reports, paper drafts, presentation content, screenshots, visual/demo assets, and explanatory replay content are released under Creative Commons Attribution-NonCommercial 4.0 International.
+
+See `LICENSE-DOCS-ASSETS-CC-BY-NC-4.0.md`.
+
+## Third-Party Files
+
+Third-party libraries keep their original licenses. In particular, `demo/vendor/phaser.min.js` is not relicensed by this repository.
+
+## Note
+
+This summary is provided for repository clarity and is not legal advice.
