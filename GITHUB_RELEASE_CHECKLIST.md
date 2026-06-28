@@ -4,37 +4,23 @@
 
 - Local export repository is initialized.
 - Public-safe files are committed on `main`.
-- No remote is configured yet.
+- Remote is configured and pushed.
 
-## Before Remote Creation
+```text
+https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness
+```
+
+- Visibility: private.
+
+## Before Public Release
 
 Decide:
 
-1. Repository name.
-2. Visibility: public or private.
-3. License strategy.
+1. Whether to keep private or switch to public.
+2. License strategy.
+3. Whether GitHub Pages should serve `demo/` and `presentation/`.
 
-Recommended temporary visibility: private.
-
-Recommended repository name:
-
-```text
-ai-npc-social-reasoning-harness
-```
-
-## Suggested Remote Commands
-
-Create private repository:
-
-```bash
-gh repo create ai-npc-social-reasoning-harness --private --source=. --remote=origin --push
-```
-
-Create public repository:
-
-```bash
-gh repo create ai-npc-social-reasoning-harness --public --source=. --remote=origin --push
-```
+Temporary visibility is private.
 
 ## Post-Push Checks
 
