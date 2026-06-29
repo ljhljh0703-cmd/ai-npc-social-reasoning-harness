@@ -105,6 +105,44 @@
     return materializeEvent(getTimeline()[state.stepIndex]);
   }
 
+  function getExecutedId(event) {
+    if (event.executedId) return event.executedId;
+    const rows = event.voteRows || (event.voteKey ? DATA.votes[event.voteKey]?.[event.branch] : null);
+    if (!rows?.length) return null;
+    return rows.reduce((top, row) => (row.count > top.count ? row : top), rows[0]).target;
+  }
+
+  function getNightEliminatedIds(event) {
+    if (event.eliminatedIds) return event.eliminatedIds;
+    return DATA.players
+      .filter((player) => {
+        const name = player.name;
+        const nameNearDeath = new RegExp(`${name}(?:이|가|은|는|을|를|와|과|,)?[^.。\\n]{0,12}(?:사망|처형)`);
+        const deathNearName = new RegExp(`(?:사망|처형)[^.。\\n]{0,12}${name}`);
+        if (nameNearDeath.test(event.text || "") || deathNearName.test(event.text || "")) return true;
+        return (event.nightActions?.presenter || []).some((action) => {
+          const text = action.text || "";
+          return text.includes(name) && /사망|처형/.test(text);
+        });
+      })
+      .map((player) => player.id);
+  }
+
+  function getEliminatedIds(upToIndex = state.stepIndex) {
+    const eliminated = new Set();
+    getTimeline()
+      .slice(0, upToIndex + 1)
+      .map((event) => materializeEvent(event))
+      .forEach((event) => {
+        if (event.kind === "night") getNightEliminatedIds(event).forEach((id) => eliminated.add(id));
+        if (event.kind === "vote") {
+          const executed = getExecutedId(event);
+          if (executed) eliminated.add(executed);
+        }
+      });
+    return eliminated;
+  }
+
   function playerName(id) {
     return playerById.get(id)?.name || id;
   }
@@ -268,6 +306,40 @@
     }
 
     panel.classList.remove("is-hidden");
+  }
+
+  function renderNightBanner(event) {
+    const banner = $("night-action-banner");
+    if (event.kind !== "night") {
+      banner.classList.add("is-hidden");
+      banner.innerHTML = "";
+      return;
+    }
+
+    const rows =
+      state.view === "presenter"
+        ? event.nightActions.presenter
+        : [{ icon: "role_hidden", actor: "밤 결과", text: event.nightActions.viewer }];
+    banner.innerHTML = `
+      <div class="night-banner-title">
+        <span>${escapeHtml(event.phase)}</span>
+        <strong>밤 행동 로그</strong>
+      </div>
+      <div class="night-banner-grid">
+        ${rows
+          .map(
+            (action) => `
+              <div class="night-banner-row">
+                <img src="${iconPath(action.icon)}" alt="" />
+                <strong>${escapeHtml(action.actor)}</strong>
+                <span>${escapeHtml(action.text)}</span>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
+    `;
+    banner.classList.remove("is-hidden");
   }
 
   function getRoleText(player) {
@@ -465,6 +537,7 @@
     renderLabels(event);
     renderVotePanel(event);
     renderNightPanel(event);
+    renderNightBanner(event);
     renderNpcPanel();
     renderLog();
     if (sceneRef) sceneRef.updateFromState();
@@ -670,6 +743,7 @@
       this.nameTexts = new Map();
       this.roleTexts = new Map();
       this.suspicionBars = new Map();
+      this.tombstones = new Map();
       this.bubble = null;
       this.nightIcons = null;
       this.resultCard = null;
@@ -810,11 +884,40 @@
         .setOrigin(0.5);
       const barBack = this.add.rectangle(player.x, player.y + 72, 48, 5, 0x141718, 0.7).setOrigin(0.5);
       const bar = this.add.rectangle(player.x - 24, player.y + 72, 1, 5, 0xf2bc57, 1).setOrigin(0, 0.5);
+      const tombstone = this.createTombstone(player);
 
       this.playerSprites.set(player.id, { sprite, shadow, barBack });
       this.nameTexts.set(player.id, nameText);
       this.roleTexts.set(player.id, roleText);
       this.suspicionBars.set(player.id, bar);
+      this.tombstones.set(player.id, tombstone);
+    }
+
+    createTombstone(player) {
+      const container = this.add.container(player.x, player.y + 10);
+      const stone = this.add.graphics();
+      stone.fillStyle(0xd8d1c3, 0.96);
+      stone.lineStyle(3, 0x545b5d, 0.95);
+      stone.fillRoundedRect(-22, -38, 44, 58, 18);
+      stone.strokeRoundedRect(-22, -38, 44, 58, 18);
+      stone.fillStyle(0x9a9488, 1);
+      stone.fillRect(-26, 18, 52, 12);
+      stone.fillStyle(0x6f7678, 1);
+      stone.fillRect(-4, -22, 8, 27);
+      stone.fillRect(-13, -13, 26, 7);
+      const label = this.add
+        .text(0, 34, "탈락", {
+          fontFamily: '"Apple SD Gothic Neo", sans-serif',
+          fontSize: "12px",
+          color: "#f6f2e8",
+          stroke: "#171b1e",
+          strokeThickness: 4
+        })
+        .setOrigin(0.5);
+      container.add([stone, label]);
+      container.setDepth(12);
+      container.setVisible(false);
+      return container;
     }
 
     updateFromState() {
@@ -823,23 +926,43 @@
       const sourceRelationships =
         state.source === "real" ? DATA.realRunExample.relationships : DATA.relationships[branch];
       const selectedRel = sourceRelationships[state.selected] || {};
+      const eliminated = getEliminatedIds();
 
       DATA.players.forEach((player) => {
         const entry = this.playerSprites.get(player.id);
         const selected = state.selected === player.id;
+        const isEliminated = eliminated.has(player.id);
         entry.sprite.clearTint();
-        entry.sprite.setScale(selected ? 0.72 : 0.68);
-        entry.shadow.setScale(1);
-        if (selected) entry.shadow.setFillStyle(0xf2bc57, 0.42);
-        else entry.shadow.setFillStyle(0x111111, 0.28);
+        entry.sprite.setVisible(!isEliminated);
+        entry.barBack.setVisible(!isEliminated);
+        entry.shadow.setScale(isEliminated ? 0.85 : 1);
+        if (isEliminated) {
+          entry.shadow.setFillStyle(0x111111, 0.48);
+        } else if (selected) {
+          entry.sprite.setScale(0.72);
+          entry.shadow.setFillStyle(0xf2bc57, 0.42);
+        } else {
+          entry.sprite.setScale(0.68);
+          entry.shadow.setFillStyle(0x111111, 0.28);
+        }
 
         const role = state.view === "presenter" || event.kind === "result" ? getPlayerRole(player) : "???";
-        this.roleTexts.get(player.id).setText(role);
+        this.roleTexts.get(player.id).setText(isEliminated ? "탈락" : role);
+        this.roleTexts.get(player.id).setStyle({
+          color: isEliminated ? "#d8d1c3" : "#fff7df",
+          backgroundColor: isEliminated ? "rgba(20,23,24,0.86)" : "rgba(20,23,24,0.72)"
+        });
+        this.nameTexts.get(player.id).setAlpha(isEliminated ? 0.78 : 1);
 
         const score = player.id === state.selected ? 0 : selectedRel[player.id] || 0;
         const bar = this.suspicionBars.get(player.id);
-        bar.width = player.id === state.selected ? 0 : Math.max(4, Math.round(score * 0.48));
+        bar.setVisible(!isEliminated);
+        bar.width = player.id === state.selected || isEliminated ? 0 : Math.max(4, Math.round(score * 0.48));
         bar.setFillStyle(score >= 75 ? 0xd86d5c : score >= 52 ? 0xf2bc57 : 0x61b36f, 1);
+
+        const tombstone = this.tombstones.get(player.id);
+        tombstone.setVisible(isEliminated);
+        tombstone.setAlpha(selected ? 1 : 0.9);
       });
 
       this.updateSpeechBubble(event);
