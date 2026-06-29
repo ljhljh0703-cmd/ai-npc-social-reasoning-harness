@@ -266,10 +266,11 @@
       duration: 2600,
       nightActions: {
         presenter: [
-          { icon: "wolf", actor: "지호 + 준서", text: "서연 제거 시도" },
-          { icon: "crystal", actor: "서연", text: "지호를 조사: 늑대" },
-          { icon: "shield", actor: "도윤", text: "서연 보호" },
-          { icon: "witch", actor: "하은", text: "포션 보류" }
+          { icon: "wolf", actor: "지호", text: "-> 서연(예언자) 공격 시도" },
+          { icon: "wolf", actor: "준서", text: "-> 서연(예언자) 공격 동조" },
+          { icon: "crystal", actor: "서연", text: "-> 조사 지호(늑대)" },
+          { icon: "shield", actor: "도윤", text: "-> 보호 서연(예언자)" },
+          { icon: "witch", actor: "하은", text: "-> 포션 보류" }
         ],
         viewer: "밤 사이 사망자는 없었다."
       },
@@ -419,10 +420,10 @@
       duration: 2900,
       nightActions: {
         presenter: [
-          { icon: "wolf", actor: "준서", text: "서연 제거 시도" },
-          { icon: "crystal", actor: "서연", text: "준서를 조사: 늑대" },
-          { icon: "shield", actor: "도윤", text: "서연 보호" },
-          { icon: "witch", actor: "하은", text: "회복 포션 보류" }
+          { icon: "wolf", actor: "준서", text: "-> 서연(예언자) 공격 시도" },
+          { icon: "crystal", actor: "서연", text: "-> 조사 준서(늑대)" },
+          { icon: "shield", actor: "도윤", text: "-> 보호 서연(예언자)" },
+          { icon: "witch", actor: "하은", text: "-> 회복 포션 보류" }
         ],
         viewer: "밤 사이 사망자는 없었다."
       },
@@ -718,14 +719,15 @@
         kind: "night",
         icon: "crystal",
         duration: 2800,
-        text: "Night 1에는 민준과 하은이 사망했고, 예언자 수아는 민준을 시민으로 확인했다.",
+        text: "Night 1에는 지호와 준서의 밤 공격으로 민준(시민), 하은(가드)이 사망했고, 예언자 수아는 민준을 시민으로 확인했다.",
         labels: ["game_history", "사건 축"],
         nightActions: {
           presenter: [
-            { icon: "wolf", actor: "지호 + 준서", text: "민준, 하은 사망 기록" },
-            { icon: "crystal", actor: "수아", text: "민준 조사: 시민" },
-            { icon: "shield", actor: "하은", text: "보호 성공 기록 없음" },
-            { icon: "witch", actor: "도윤", text: "마녀 생존" }
+            { icon: "wolf", actor: "지호", text: "-> 민준(시민) kill" },
+            { icon: "wolf", actor: "준서", text: "-> 하은(가드) kill" },
+            { icon: "crystal", actor: "수아", text: "-> 조사 민준(시민)" },
+            { icon: "shield", actor: "하은", text: "-> 보호 대상 기록 없음" },
+            { icon: "witch", actor: "도윤", text: "-> 생존(마녀)" }
           ],
           viewer: "밤 사이 민준과 하은이 사망했다."
         }
@@ -789,14 +791,14 @@
         kind: "night",
         icon: "wolf",
         duration: 2600,
-        text: "Night 2에는 수아가 사망했고, 예언자 기록에는 도윤이 마녀로 확인된 흐름이 남는다.",
+        text: "Night 2에는 지호의 밤 공격으로 수아(예언자)가 사망했고, 예언자 기록에는 도윤이 마녀로 확인된 흐름이 남는다.",
         labels: ["사건 축", "역할 단서"],
         nightActions: {
           presenter: [
-            { icon: "wolf", actor: "지호", text: "수아 사망 기록" },
-            { icon: "crystal", actor: "수아", text: "도윤 조사: 마녀" },
-            { icon: "shield", actor: "하은", text: "이미 사망" },
-            { icon: "witch", actor: "도윤", text: "마녀로 확인" }
+            { icon: "wolf", actor: "지호", text: "-> 수아(예언자) kill" },
+            { icon: "crystal", actor: "수아", text: "-> 조사 도윤(마녀)" },
+            { icon: "shield", actor: "하은", text: "-> 행동 불가(사망)" },
+            { icon: "witch", actor: "도윤", text: "-> 마녀로 확인" }
           ],
           viewer: "밤 사이 수아가 사망했다."
         }
