@@ -750,6 +750,7 @@
     }
 
     preload() {
+      this.load.image("village-bg", "assets/environment/village_scene_bg.png");
       DATA.players.forEach((player) => {
         this.load.image(`player-${player.id}`, `assets/characters/player_${player.asset}_pose_1.png`);
       });
@@ -776,81 +777,7 @@
     }
 
     drawVillage() {
-      const g = this.add.graphics();
-      g.fillStyle(0x2f6d49, 1);
-      g.fillRect(0, 0, 960, 640);
-
-      g.lineStyle(1, 0x3b7a56, 0.45);
-      for (let x = 0; x < 960; x += 48) g.lineBetween(x, 0, x, 640);
-      for (let y = 0; y < 640; y += 48) g.lineBetween(0, y, 960, y);
-
-      g.fillStyle(0xa87848, 1);
-      g.fillRect(452, 0, 70, 640);
-      g.fillRect(0, 372, 960, 74);
-      g.fillStyle(0xbd8d58, 1);
-      g.fillEllipse(480, 390, 310, 220);
-
-      g.fillStyle(0x6ca6b8, 1);
-      g.fillRoundedRect(54, 70, 178, 92, 16);
-      g.fillStyle(0x8fd0d8, 0.6);
-      g.fillEllipse(120, 108, 46, 18);
-      g.fillEllipse(186, 134, 34, 14);
-
-      this.drawHouse(g, 260, 94, 126, 84, 0xb84242, 0xf2d190);
-      this.drawHouse(g, 626, 86, 138, 88, 0x4567a6, 0xe6c28c);
-      this.drawHouse(g, 126, 456, 132, 84, 0x8a5eb8, 0xe8c989);
-      this.drawHouse(g, 748, 462, 128, 84, 0xd0803f, 0xe3c17d);
-
-      this.drawTrees(g, [
-        [82, 254],
-        [142, 270],
-        [844, 238],
-        [884, 282],
-        [82, 578],
-        [906, 584],
-        [410, 82],
-        [546, 78]
-      ]);
-
-      g.fillStyle(0x4e3428, 1);
-      g.fillRect(430, 306, 100, 16);
-      g.fillStyle(0xd8b165, 1);
-      g.fillRect(438, 284, 84, 28);
-      this.add.text(480, 300, "토론 광장", {
-        fontFamily: '"Apple SD Gothic Neo", sans-serif',
-        fontSize: "14px",
-        color: "#3a2419",
-        fontStyle: "700"
-      }).setOrigin(0.5);
-    }
-
-    drawHouse(g, x, y, w, h, roof, wall) {
-      g.fillStyle(wall, 1);
-      g.fillRoundedRect(x, y + 24, w, h, 4);
-      g.fillStyle(roof, 1);
-      g.beginPath();
-      g.moveTo(x - 10, y + 30);
-      g.lineTo(x + w / 2, y - 12);
-      g.lineTo(x + w + 10, y + 30);
-      g.closePath();
-      g.fillPath();
-      g.fillStyle(0x5b392a, 1);
-      g.fillRect(x + w / 2 - 12, y + h - 2, 24, 26);
-      g.fillStyle(0xf6f2e8, 0.65);
-      g.fillRect(x + 18, y + 48, 24, 18);
-      g.fillRect(x + w - 42, y + 48, 24, 18);
-    }
-
-    drawTrees(g, coords) {
-      coords.forEach(([x, y]) => {
-        g.fillStyle(0x5a3824, 1);
-        g.fillRect(x - 5, y + 18, 10, 24);
-        g.fillStyle(0x2e7d46, 1);
-        g.fillCircle(x, y, 24);
-        g.fillStyle(0x3f9a55, 1);
-        g.fillCircle(x - 10, y + 4, 16);
-        g.fillCircle(x + 12, y + 6, 15);
-      });
+      this.add.image(0, 0, "village-bg").setOrigin(0).setDepth(0);
     }
 
     createPlayer(player) {
