@@ -23,6 +23,8 @@ The paper is provided in separate Korean and English versions.
 
 LLM NPCs can produce plausible dialogue, but that does not prove the dialogue is grounded in social reasoning. This project uses a 7-player Werewolf game as an incomplete-information social-reasoning environment and separates fluent dialogue from measurable voting, execution, and win-condition behavior.
 
+The project is directly motivated by Xu et al.'s Werewolf LLM study. That work implements a seven-player Werewolf game as a natural-language communication game and combines frozen LLMs with communication retrieval, reflection, and experience-based suggestions, observing strategic behaviors such as trust, confrontation, camouflage, and leadership. This project extends that motivation with a humanities-grounded scaffold, seed-controlled comparison, explicit raw/display separation, and output-quality gates.
+
 ## Core Differentiators
 
 - **Humanities-grounded interdisciplinary scaffold** — Structures utterance analysis, public-opinion analysis, beneficiary analysis, and interrogation strategy as a public reasoning frame for NPCs.

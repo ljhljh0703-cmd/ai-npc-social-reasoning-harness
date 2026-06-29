@@ -40,6 +40,8 @@ LLM 에이전트 연구는 언어 모델을 정적 텍스트 생성기가 아니
 
 사회추론 게임은 LLM의 사회적 행동을 압축적으로 검토할 수 있는 환경이다. 선행 연구는 Werewolf 또는 유사 사회추론 게임을 사용해 LLM의 커뮤니케이션, 기만 관련 행동, 사회추론 전략을 평가했다 [@bailis2024werewolfarena; @xu2023werewolfllm; @song2025beyondsurvival]. 본 논문의 기여는 단순한 게임 플레이 결과가 아니라, raw 성능, 표시 위생, 구성개념 타당도를 구분하는 claim-gated harness에 있다.
 
+본 연구의 더 직접적인 출발점은 Xu 등(2023/2024)의 Werewolf LLM 연구다. 해당 연구는 7인 늑대인간을 자연어 커뮤니케이션 게임으로 구현하고, 동결 LLM에 과거 대화 retrieval, reflection, experience 기반 suggestion을 결합해 trust, confrontation, camouflage, leadership 같은 전략 행동이 관찰될 수 있음을 보였다 [@xu2023werewolfllm]. 본 연구는 이 문제의식에서 직접적인 영감을 받았다. 다만 본 연구는 experience pool 자체를 확장하는 대신, 인문학 기반 스캐폴드와 seed 고정 비교, raw/display 경계, 출력 품질 gate를 전면에 둔다.
+
 추론 스캐폴드 연구도 본 연구의 배경이다. Chain-of-thought prompting은 구조화된 중간 추론이 일부 추론 과제의 성능을 높일 수 있음을 보였다 [@wei2022chain]. ReAct는 reasoning과 action을 결합해 상호작용 행동을 구성한다 [@yao2023react]. Reflexion은 language agent의 언어적 자기반성을 다룬다 [@shinn2023reflexion]. 본 연구의 스캐폴드는 더 좁다. 공개 대화에 private chain-of-thought를 노출하지 않고, 숨은 정답도 제공하지 않는다. 대신 공개 사회적 단서, 즉 발화, 여론 흐름, 수혜자, 후속 질문에 주의를 구조화한다.
 
 사회심리학과 게임이론은 해석 어휘를 제공한다. 동조 연구는 공개 동의 압력을 관찰해야 하는 이유를 제공한다 [@asch1956conformity]. Groupthink와 group polarization은 성급한 합의와 의혹 집중을 주의해야 하는 배경을 제공한다 [@janis1972groupthink; @myers1976grouppolarization]. Cheap talk 이론은 숨은 역할 게임의 공개 발화를 전략적이고 신뢰 불완전한 정보로 다루는 이유를 제공한다 [@crawford1982strategic]. 이 문헌들은 proxy 설계의 배경으로만 사용되며, LLM NPC가 인간 심리 상태를 가진다는 증거로 사용하지 않는다.
