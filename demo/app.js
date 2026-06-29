@@ -905,16 +905,7 @@
       stone.fillStyle(0x6f7678, 1);
       stone.fillRect(-4, -22, 8, 27);
       stone.fillRect(-13, -13, 26, 7);
-      const label = this.add
-        .text(0, 34, "탈락", {
-          fontFamily: '"Apple SD Gothic Neo", sans-serif',
-          fontSize: "12px",
-          color: "#f6f2e8",
-          stroke: "#171b1e",
-          strokeThickness: 4
-        })
-        .setOrigin(0.5);
-      container.add([stone, label]);
+      container.add([stone]);
       container.setDepth(12);
       container.setVisible(false);
       return container;
@@ -947,10 +938,10 @@
         }
 
         const role = state.view === "presenter" || event.kind === "result" ? getPlayerRole(player) : "???";
-        this.roleTexts.get(player.id).setText(isEliminated ? "탈락" : role);
+        this.roleTexts.get(player.id).setText(role);
         this.roleTexts.get(player.id).setStyle({
-          color: isEliminated ? "#d8d1c3" : "#fff7df",
-          backgroundColor: isEliminated ? "rgba(20,23,24,0.86)" : "rgba(20,23,24,0.72)"
+          color: "#fff7df",
+          backgroundColor: "rgba(20,23,24,0.72)"
         });
         this.nameTexts.get(player.id).setAlpha(isEliminated ? 0.78 : 1);
 
