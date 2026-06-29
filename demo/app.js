@@ -14,7 +14,7 @@
     thoughtOpen: false,
     npcTab: "relation",
     logOpen: false,
-    playing: true,
+    playing: false,
     sliders: Object.fromEntries(DATA.axis.map((axis) => [axis.key, axis.defaultValue]))
   };
 
@@ -166,6 +166,7 @@
     $("view-presenter").classList.toggle("is-active", state.view === "presenter");
     $("view-viewer").classList.toggle("is-active", state.view === "viewer");
     $("play-toggle").querySelector("img").src = iconPath(state.playing ? "pause" : "play");
+    $("play-toggle").title = state.playing ? "일시정지" : "재생";
     $("speed-label").textContent = `${state.speed.toFixed(1)}x`;
     $("branch-badge").textContent = getBranchLabel();
     document.body.dataset.source = state.source;
@@ -187,6 +188,16 @@
     $("log-toggle").textContent = state.logOpen ? "접기" : "펼치기";
     $("log-toggle").setAttribute("aria-expanded", String(state.logOpen));
     document.querySelector(".event-log-wrap").classList.toggle("is-open", state.logOpen);
+
+    const timeline = getTimeline();
+    const atStart = state.stepIndex <= 0;
+    const atEnd = state.stepIndex >= timeline.length - 1;
+    $("prev-step").disabled = atStart;
+    $("next-step").disabled = atEnd;
+    $("step-range").max = String(timeline.length);
+    $("step-range").value = String(state.stepIndex + 1);
+    $("playback-status").textContent = state.playing ? "재생 중" : atEnd ? "완료" : atStart ? "녹화 준비" : "일시정지";
+    $("recording-cue").classList.toggle("is-hidden", state.playing || !atStart);
   }
 
   function renderLabels(event) {
@@ -478,7 +489,27 @@
 
   function resetRun() {
     state.stepIndex = 0;
+    state.playing = false;
+    renderAll();
+    scheduleNext();
+  }
+
+  function replayRun() {
+    state.stepIndex = 0;
     state.playing = true;
+    renderAll();
+    scheduleNext();
+  }
+
+  function stepBy(delta) {
+    setStep(state.stepIndex + delta);
+  }
+
+  function togglePlayback() {
+    if (!state.playing && state.stepIndex >= getTimeline().length - 1) {
+      state.stepIndex = 0;
+    }
+    state.playing = !state.playing;
     renderAll();
     scheduleNext();
   }
@@ -552,7 +583,7 @@
     $("source-fixture").addEventListener("click", () => {
       state.source = "fixture";
       state.stepIndex = 0;
-      state.playing = true;
+      state.playing = false;
       renderAll();
       scheduleNext();
     });
@@ -560,7 +591,7 @@
       state.source = "real";
       state.mode = "scaffold";
       state.stepIndex = 0;
-      state.playing = true;
+      state.playing = false;
       renderAll();
       scheduleNext();
     });
@@ -589,12 +620,12 @@
       renderAll();
       scheduleNext();
     });
-    $("play-toggle").addEventListener("click", () => {
-      state.playing = !state.playing;
-      renderAll();
-      scheduleNext();
-    });
+    $("play-toggle").addEventListener("click", togglePlayback);
+    $("prev-step").addEventListener("click", () => stepBy(-1));
+    $("next-step").addEventListener("click", () => stepBy(1));
+    $("step-range").addEventListener("input", (event) => setStep(Number(event.target.value) - 1));
     $("reset-run").addEventListener("click", resetRun);
+    $("replay-run").addEventListener("click", replayRun);
     $("download-log").addEventListener("click", downloadLog);
     $("log-toggle").addEventListener("click", () => {
       state.logOpen = !state.logOpen;
@@ -609,6 +640,26 @@
     $("thought-toggle").addEventListener("click", () => {
       state.thoughtOpen = !state.thoughtOpen;
       renderNpcPanel();
+    });
+    document.addEventListener("keydown", (event) => {
+      const tag = event.target?.tagName;
+      if (tag === "INPUT" || tag === "BUTTON" || tag === "A" || event.target?.isContentEditable) return;
+      if (event.code === "Space") {
+        event.preventDefault();
+        togglePlayback();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        stepBy(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        stepBy(1);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        resetRun();
+      } else if (event.key.toLowerCase() === "r") {
+        event.preventDefault();
+        replayRun();
+      }
     });
   }
 
@@ -963,6 +1014,7 @@
     getBranch,
     currentEvent,
     resetRun,
+    replayRun,
     setStep,
     downloadLog
   };
@@ -971,5 +1023,4 @@
   bindControls();
   bootPhaser();
   renderAll();
-  scheduleNext();
 })();

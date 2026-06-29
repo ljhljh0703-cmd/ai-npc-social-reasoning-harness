@@ -48,9 +48,12 @@
 
         <div class="toolbar-actions">
           <button class="icon-button" id="play-toggle" type="button" title="재생/일시정지">
-            <img src="assets/icons/pause.png" alt="" />
+            <img src="assets/icons/play.png" alt="" />
           </button>
+          <button class="text-button" id="prev-step" type="button">이전</button>
+          <button class="text-button" id="next-step" type="button">다음</button>
           <button class="text-button" id="reset-run" type="button">처음</button>
+          <button class="text-button" id="replay-run" type="button">리플레이</button>
           <a class="text-button with-icon" href="report.html" target="_blank" rel="noreferrer">
             <img src="assets/icons/report.png" alt="" />
             리포트
@@ -82,10 +85,18 @@
               <span id="phase-label">역할 배정</span>
               <strong id="step-counter">1 / 13</strong>
             </div>
-            <p id="event-text"></p>
-            <div id="event-labels" class="label-row"></div>
+          <p id="event-text"></p>
+          <div id="event-labels" class="label-row"></div>
+          <div class="replay-scrub" aria-label="리플레이 제어">
+            <span id="playback-status">녹화 준비</span>
+            <input id="step-range" type="range" min="1" max="13" value="1" step="1" aria-label="리플레이 진행 위치" />
           </div>
-          <div id="vote-panel" class="floating-panel is-hidden">
+        </div>
+        <div id="recording-cue" class="recording-cue">
+          <strong>녹화 준비</strong>
+          <span>재생 버튼 또는 Space로 시작</span>
+        </div>
+        <div id="vote-panel" class="floating-panel is-hidden">
             <div class="panel-title">투표 결과</div>
             <div id="vote-list"></div>
           </div>
