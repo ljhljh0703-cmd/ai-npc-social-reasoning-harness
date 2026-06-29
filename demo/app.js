@@ -119,8 +119,7 @@
         const name = player.name;
         const deathWords = "사망|처형|kill|살해";
         const nameNearDeath = new RegExp(`${name}(?:이|가|은|는|을|를|와|과|,)?[^.。\\n]{0,12}(?:${deathWords})`);
-        const deathNearName = new RegExp(`(?:${deathWords})[^.。\\n]{0,12}${name}`);
-        if (nameNearDeath.test(event.text || "") || deathNearName.test(event.text || "")) return true;
+        if (nameNearDeath.test(event.text || "")) return true;
         return (event.nightActions?.presenter || []).some((action) => {
           const text = action.text || "";
           return text.includes(name) && new RegExp(deathWords).test(text);

@@ -264,6 +264,7 @@
       kind: "night",
       icon: "wolf",
       duration: 2600,
+      eliminatedIds: [],
       nightActions: {
         presenter: [
           { icon: "wolf", actor: "지호", text: "-> 서연(예언자) 공격 시도" },
@@ -418,6 +419,7 @@
       kind: "night",
       icon: "wolf",
       duration: 2900,
+      eliminatedIds: [],
       nightActions: {
         presenter: [
           { icon: "wolf", actor: "준서", text: "-> 서연(예언자) 공격 시도" },
@@ -720,6 +722,7 @@
         icon: "crystal",
         duration: 2800,
         text: "Night 1에는 지호와 준서의 밤 공격으로 민준(시민), 하은(가드)이 사망했고, 예언자 수아는 민준을 시민으로 확인했다.",
+        eliminatedIds: ["minjun", "haeun"],
         labels: ["game_history", "사건 축"],
         nightActions: {
           presenter: [
@@ -792,6 +795,7 @@
         icon: "wolf",
         duration: 2600,
         text: "Night 2에는 지호의 밤 공격으로 수아(예언자)가 사망했고, 예언자 기록에는 도윤이 마녀로 확인된 흐름이 남는다.",
+        eliminatedIds: ["sua"],
         labels: ["사건 축", "역할 단서"],
         nightActions: {
           presenter: [
