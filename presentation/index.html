@@ -17,7 +17,8 @@
       <a href="#s05">지표</a>
       <a href="#s08">결과</a>
       <a href="#s10">데모</a>
-      <a href="#s12">결론</a>
+      <a href="#s12">다음</a>
+      <a href="#s13">결론</a>
     </nav>
   </header>
 
@@ -349,7 +350,33 @@
       <p class="note">GitHub README와 국문/영문 논문은 같은 claim gate를 공유해야 한다.</p>
     </section>
 
-    <section class="slide conclusion" id="s12">
+    <section class="slide" id="s12">
+      <div class="slide-kicker">다음 스테이지</div>
+      <h2>현재는 하네스와 스캐폴드 탐색, 다음은 마음이론 proxy 검증</h2>
+      <div class="two-col">
+        <div>
+          <h3>지금 말할 수 있는 것</h3>
+          <ul>
+            <li>동일 seed와 동일 룰에서 반복 비교하는 하네스를 만들었다.</li>
+            <li>스캐폴드는 정답 제공이 아니라 발화·여론·수혜자·심문을 보게 하는 보조 틀이다.</li>
+            <li>RT2.3 N=20에서는 품질 통제 상태의 약한 양의 방향이 관찰됐다.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>다음에 검증할 것</h3>
+          <ul>
+            <li>paired seed divergence 분석.</li>
+            <li>모순·몰아가기·follow-up human annotation.</li>
+            <li>belief-state table 기반 마음이론 proxy.</li>
+            <li>Xu식 retrieval/reflection/experience와 직접 비교.</li>
+            <li>다중 모델과 더 큰 N 재현.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="claim warn">이번 결과는 마음이론 해결이나 일반적 성능 우월성의 증거가 아니다.</p>
+    </section>
+
+    <section class="slide conclusion" id="s13">
       <div class="slide-kicker">결론</div>
       <h2>이번 성과는 "더 잘 이겼다"보다 "검증 가능해졌다"에 있다</h2>
       <div class="conclusion-stack">
@@ -357,7 +384,7 @@
         <p>성능 지표와 발화 품질 지표를 분리해 claim을 통제했다.</p>
       <p>RT2.3 N=20에서 scaffold는 품질 통제 상태로 주요 지표의 양의 방향이 관찰됐다.</p>
       </div>
-      <p class="claim final">강한 개선 결론은 보류하며, 후속 N 확장과 다른 모델 재현이 필요하다.</p>
+      <p class="claim final">강한 개선 결론은 보류하며, 후속 human annotation, paired seed 분석, 다중 모델 재현이 필요하다.</p>
       <div class="footer-actions">
         <a href="#s01">처음으로</a>
         <a href="../demo/index.html">데모</a>

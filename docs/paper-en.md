@@ -171,7 +171,23 @@ Fifth, the public repository does not include complete raw archives. This is acc
 
 Sixth, STEP7-O is an auxiliary harness check. It passed the quality and diversity gates, but it used N=5 and showed weak game performance. It is therefore excluded from the main scaffold-efficacy claim.
 
-## 8. Conclusion
+The current position of this work is therefore not “a model that solved social reasoning,” but “a harness and scaffold exploration for repeatedly running and conservatively evaluating social-reasoning NPCs.” Claims beyond that boundary are not supported by the present evidence.
+
+## 8. Next Stage
+
+The next research stage should strengthen theory-of-mind and social-reasoning claims in the following order.
+
+First, perform paired seed analysis. For each matched baseline/scaffold seed, the analysis should identify which discussion, vote, or night action caused the trajectories to diverge. This is more informative than aggregate deltas alone.
+
+Second, add independent human annotation. The current utterance-analysis, public-opinion, beneficiary, and interrogation labels are mostly rule-based or log-derived proxies. Future work should ask human annotators to label contradiction detection, evasion, bandwagoning, follow-up quality, and beneficiary reasoning, then compare those labels against automated metrics.
+
+Third, define explicit theory-of-mind proxies. The harness should record belief-state tables: who the model assumes knows what, which beliefs are attributed to which players, and whether those beliefs update after new evidence. Without this layer, a theory-of-mind solution claim is not justified.
+
+Fourth, directly compare Xu-style retrieval/reflection/experience conditions against the humanities scaffold. A stronger follow-up should include `baseline`, `retrieval/reflection/experience`, `humanities scaffold`, and `combined` arms to isolate which component changes behavior.
+
+Fifth, replicate across multiple LLMs and larger N. General superiority claims should remain withheld until the trend survives at least multiple model families, decoding settings, and larger seed sets.
+
+## 9. Conclusion
 
 This paper presents a controlled Werewolf harness for evaluating observable social-reasoning behavior in LLM NPCs. The harness separates raw game metrics from display-level output hygiene and applies a conservative claim gate to an interdisciplinary village-side scaffold. In STEP7-M RT2.3 N=20, the scaffold arm preserved raw quality 20/20 and replacements 0 while showing small positive deltas in win rate, role inference, vote consistency, and duration. The evidence is exploratory and bounded. The stronger contribution is methodological: it shows how social-deduction NPC behavior can be evaluated without confusing fluent dialogue, sanitized presentation, and measured reasoning.
 

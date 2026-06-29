@@ -25,11 +25,32 @@ LLM NPCs can produce plausible dialogue, but that does not prove the dialogue is
 
 The project is directly motivated by Xu et al.'s Werewolf LLM study. That work implements a seven-player Werewolf game as a natural-language communication game and combines frozen LLMs with communication retrieval, reflection, and experience-based suggestions, observing strategic behaviors such as trust, confrontation, camouflage, and leadership. This project extends that motivation with a humanities-grounded scaffold, seed-controlled comparison, explicit raw/display separation, and output-quality gates.
 
+## Key Terms for Non-Specialists
+
+| Term | Meaning in this project |
+|---|---|
+| Harness | A testing rig that runs experiments under comparable conditions and records the results. Here it bundles seeds, role setup, run logs, metrics, and quality gates. |
+| Scaffold | A reasoning support frame, not an answer key. It nudges NPCs to track utterance analysis, public-opinion flow, beneficiary analysis, and interrogation strategy. |
+| Raw/display boundary | Raw experiment logs are separated from presentation-facing text and visuals. Performance claims are made from raw results only. |
+| Claim gate | A threshold that prevents overstating weak results. This project did not pass the strong claim gate, so the result is reported as an exploratory trend. |
+
 ## Core Differentiators
 
 - **Humanities-grounded interdisciplinary scaffold** — Structures utterance analysis, public-opinion analysis, beneficiary analysis, and interrogation strategy as a public reasoning frame for NPCs.
 - **Seed-controlled Werewolf evaluation harness** — Compares baseline and scaffold arms under the same seeds and the same 7-player role setup.
 - **Raw/display boundary and claim gate** — Separates raw performance metrics from display-level sanitized artifacts and withholds strong performance claims because the strong gate was not passed.
+
+## Current Stage and Next Stage
+
+The current contribution is **evaluation harness construction plus scaffold exploration**. The result does not prove that an AI taught the humanities generally reasons better. It is an early controlled test of whether a scaffold can weakly shift observable behavior while output quality is held constant.
+
+The next research stage should proceed as follows.
+
+1. Run paired seed-level analysis to identify where baseline and scaffold trajectories diverge.
+2. Add independent human annotation for contradiction detection, suspicion transfer, follow-up quality, and beneficiary reasoning.
+3. Record belief-state tables for “who is assumed to know what” to strengthen theory-of-mind proxies.
+4. Directly compare Xu-style retrieval/reflection/experience conditions against the humanities scaffold.
+5. Replicate across multiple LLMs and larger N to test whether the current exploratory trend survives.
 
 ## Architecture
 
