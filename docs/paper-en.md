@@ -3,7 +3,7 @@
 **A humanities-grounded interdisciplinary scaffold, evaluated in a seed-controlled Werewolf harness under output-quality control (exploratory).**
 
 Draft date: 2026-06-29  
-Status: internal final-paper candidate  
+Status: public paper candidate  
 Canonical experiment: STEP7-M RT2.3 N=20
 
 ## Abstract
