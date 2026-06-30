@@ -32,6 +32,26 @@ LLM 기반 NPC는 실제 의사결정이 약해도 사회적으로 풍부한 대
 2. 정제된 공개 문구가 원본 성능 근거로 오해되지 않도록 raw/display 경계를 분리한다.
 3. 네 축의 학제적 스캐폴드를 내부 인간형 인지의 증거가 아니라 관찰 가능한 proxy 지표로 연결한다.
 
+### 1.1 시각 개요
+
+아래 그림들은 논문 이해를 돕기 위한 개념도다. 실험 데이터 자체를 시각화한 결과표가 아니며, 성능 판단은 5장의 RT2.3 N=20 표를 기준으로 한다.
+
+![그림 1. 늑대인간 사회추론 하네스 개념도](figures/fig1_werewolf_harness_overview.png)
+
+**그림 1. 늑대인간 사회추론 하네스 개념도.** 7인 늑대인간 환경에서 공개 발화, 숨은 역할, 의혹 이동, 투표, 결과 지표가 하나의 평가 하네스로 연결되는 구조를 표현한다.
+
+![그림 2. Seed 고정 baseline/scaffold 비교 개념도](figures/fig2_seed_controlled_harness.png)
+
+**그림 2. Seed 고정 baseline/scaffold 비교 개념도.** 같은 seed와 같은 게임 조건에서 baseline arm과 scaffold arm을 실행하고, 결과를 raw 로그와 지표로 분리해 비교하는 흐름을 표현한다.
+
+![그림 3. 네 축 스캐폴드 개념도](figures/fig3_four_axis_scaffold.png)
+
+**그림 3. 네 축 스캐폴드 개념도.** 발화 분석, 여론 분석, 수혜자 분석, 심문 전략이라는 네 축을 사회추론 게임의 관찰 가능한 단서에 연결한 개념도다.
+
+![그림 4. Raw/display 경계와 claim gate 개념도](figures/fig4_raw_display_claim_gate.png)
+
+**그림 4. Raw/display 경계와 claim gate 개념도.** 원본 실험 근거와 발표용 display replay를 분리하고, 보수적 claim gate를 거쳐 허용 가능한 주장만 남기는 절차를 표현한다.
+
 ## 2. 관련연구
 
 LLM 에이전트 연구는 언어 모델을 정적 텍스트 생성기가 아니라 상호작용 환경 안에 배치할 수 있음을 보여줬다. Generative Agents는 memory, reflection, planning, interaction이 결합된 개방형 사회 시뮬레이션을 제시했다 [@park2023generativeagents]. Voyager는 환경 기반 탐색과 누적 skill 관점에서 LLM 에이전트를 다룬다 [@wang2023voyager]. 본 연구는 고정된 적대적 사회추론 과제를 사용한다는 점에서 다르다. 여기서는 대화의 그럴듯함만으로 충분하지 않고, 에이전트는 불완전정보 아래에서 감사 가능한 투표 결정을 내려야 한다.

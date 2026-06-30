@@ -32,6 +32,26 @@ The paper makes three contributions:
 2. A raw/display separation that prevents sanitized public text from being confused with raw performance evidence.
 3. A four-axis interdisciplinary scaffold whose constructs are mapped to observable proxy measures rather than claimed as evidence of internal human-like cognition.
 
+### 1.1 Visual Overview
+
+The following figures are conceptual illustrations for readability. They are not data visualizations of the experimental results. Performance interpretation should rely on the RT2.3 N=20 table in Section 5.
+
+![Figure 1. Conceptual overview of the Werewolf social-reasoning harness](figures/fig1_werewolf_harness_overview.png)
+
+**Figure 1. Conceptual overview of the Werewolf social-reasoning harness.** The figure illustrates how public utterances, hidden roles, suspicion flow, votes, and outcome metrics are connected in the evaluation harness.
+
+![Figure 2. Seed-controlled baseline/scaffold comparison](figures/fig2_seed_controlled_harness.png)
+
+**Figure 2. Seed-controlled baseline/scaffold comparison.** The figure illustrates the comparison flow: the baseline and scaffold arms are run under the same seed and game setup, then separated into raw logs and metrics.
+
+![Figure 3. Four-axis scaffold concept](figures/fig3_four_axis_scaffold.png)
+
+**Figure 3. Four-axis scaffold concept.** The figure illustrates how utterance analysis, public-opinion analysis, beneficiary analysis, and interrogation strategy are mapped onto observable social-deduction cues.
+
+![Figure 4. Raw/display boundary and claim gate](figures/fig4_raw_display_claim_gate.png)
+
+**Figure 4. Raw/display boundary and claim gate.** The figure illustrates the separation between raw experimental evidence and public display replay, with a conservative claim gate limiting what can be claimed.
+
 ## 2. Related Work
 
 LLM agent research has shown that language models can be embedded in interactive environments rather than evaluated only as static text generators. Generative Agents demonstrated how memory, reflection, planning, and interaction can produce believable social behavior in an open-ended simulation [@park2023generativeagents]. Voyager similarly frames LLM agents through environment-grounded exploration and accumulated skills [@wang2023voyager]. Our work differs by focusing on a fixed, adversarial social-deduction task where plausibility is not sufficient; the agent must make auditable voting decisions under incomplete information.
