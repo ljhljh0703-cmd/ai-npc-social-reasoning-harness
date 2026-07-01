@@ -14,7 +14,7 @@
       content="발표자 모드, 관람 모드, 4축 분석 슬라이더, 로그 다운로드를 갖춘 브라우저 기반 시각 데모."
     />
     <link rel="icon" href="data:," />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=final-visibility-20260701c" />
   </head>
   <body>
     <div class="app-shell">
@@ -24,45 +24,6 @@
           <span id="data-badge">fixture harness</span>
         </div>
 
-        <div class="toolbar-group" aria-label="데이터 소스">
-          <button class="segmented" id="source-fixture" type="button">Fixture</button>
-          <button class="segmented is-active" id="source-real" type="button">기록</button>
-        </div>
-
-        <div class="toolbar-group" aria-label="AI 모드">
-          <button class="segmented" id="mode-baseline" type="button">순정 AI</button>
-          <button class="segmented is-active" id="mode-scaffold" type="button">스캐폴드</button>
-        </div>
-
-        <div class="toolbar-group" aria-label="관람 모드">
-          <button class="segmented is-active" id="view-presenter" type="button">발표자</button>
-          <button class="segmented" id="view-viewer" type="button">관람</button>
-        </div>
-
-        <div class="speed-control">
-          <img src="assets/icons/speed.png" alt="" />
-          <span>속도</span>
-          <input id="speed-range" type="range" min="0.5" max="3" value="1.4" step="0.1" />
-          <output id="speed-label">1.4x</output>
-        </div>
-
-        <div class="toolbar-actions">
-          <button class="icon-button" id="play-toggle" type="button" title="재생/일시정지">
-            <img src="assets/icons/play.png" alt="" />
-          </button>
-          <button class="text-button" id="prev-step" type="button">이전</button>
-          <button class="text-button" id="next-step" type="button">다음</button>
-          <button class="text-button" id="reset-run" type="button">처음</button>
-          <button class="text-button" id="replay-run" type="button">리플레이</button>
-          <a class="text-button with-icon" href="report.html" target="_blank" rel="noreferrer">
-            <img src="assets/icons/report.png" alt="" />
-            리포트
-          </a>
-          <button class="text-button with-icon" id="download-log" type="button" title="로그 다운로드">
-            <img src="assets/icons/download.png" alt="" />
-            로그
-          </button>
-        </div>
       </header>
 
       <main class="workspace">
@@ -80,6 +41,47 @@
 
         <section class="stage-wrap" aria-label="시뮬레이션 화면">
           <div id="phaser-root"></div>
+          <div class="control-dock" aria-label="녹화 조작">
+            <div class="toolbar-group" aria-label="데이터 소스">
+              <button class="segmented" id="source-fixture" type="button">Fixture</button>
+              <button class="segmented is-active" id="source-real" type="button">기록</button>
+            </div>
+
+            <div class="toolbar-group" aria-label="AI 모드">
+              <button class="segmented" id="mode-baseline" type="button">순정 AI</button>
+              <button class="segmented is-active" id="mode-scaffold" type="button">스캐폴드</button>
+            </div>
+
+            <div class="toolbar-group" aria-label="관람 모드">
+              <button class="segmented is-active" id="view-presenter" type="button">발표자</button>
+              <button class="segmented" id="view-viewer" type="button">관람</button>
+            </div>
+
+            <div class="speed-control">
+              <img src="assets/icons/speed.png" alt="" />
+              <span>속도</span>
+              <input id="speed-range" type="range" min="0.5" max="3" value="1.4" step="0.1" />
+              <output id="speed-label">1.4x</output>
+            </div>
+
+            <div class="toolbar-actions">
+              <button class="icon-button" id="play-toggle" type="button" title="재생/일시정지">
+                <img src="assets/icons/play.png" alt="" />
+              </button>
+              <button class="text-button" id="prev-step" type="button">이전</button>
+              <button class="text-button" id="next-step" type="button">다음</button>
+              <button class="text-button" id="reset-run" type="button">처음</button>
+              <button class="text-button" id="replay-run" type="button">리플레이</button>
+              <a class="text-button with-icon" href="report.html" target="_blank" rel="noreferrer">
+                <img src="assets/icons/report.png" alt="" />
+                리포트
+              </a>
+              <button class="text-button with-icon" id="download-log" type="button" title="로그 다운로드">
+                <img src="assets/icons/download.png" alt="" />
+                로그
+              </button>
+            </div>
+          </div>
           <div class="stage-hud">
             <div>
               <span id="phase-label">역할 배정</span>
@@ -161,7 +163,7 @@
     </div>
 
     <script src="vendor/phaser.min.js"></script>
-    <script src="demo-data.js"></script>
-    <script src="app.js"></script>
+    <script src="demo-data.js?v=final-visibility-20260701c"></script>
+    <script src="app.js?v=final-visibility-20260701c"></script>
   </body>
 </html>

@@ -13,8 +13,8 @@ The paper is provided in separate Korean and English versions.
 
 | Document | Link | Use |
 |---|---|---|
-| Korean paper | [docs/paper-ko.md](docs/paper-ko.md) | Final Korean paper-style text |
-| English paper | [docs/paper-en.md](docs/paper-en.md) | Final English paper candidate |
+| Korean paper | [Markdown](docs/paper-ko.md) · [PDF](docs/paper-ko.pdf) | Final Korean paper-style text |
+| English paper | [Markdown](docs/paper-en.md) · [PDF](docs/paper-en.pdf) | Final English paper candidate |
 | Final report | [docs/final-report.md](docs/final-report.md) | Korean submission-oriented report |
 | Results tables | [docs/results-tables.md](docs/results-tables.md) | RT2/RT2.2/RT2.3 results and claim gates |
 | Bibliography | [docs/references.bib](docs/references.bib) | Public BibTeX |
@@ -109,6 +109,8 @@ For the reproducibility boundary, see [repro/run-manifest.md](repro/run-manifest
 ## Screenshots / Demo
 
 - Project page: <https://ljhljh0703-cmd.github.io/ai-npc-social-reasoning-harness/>
+- Korean paper PDF: [docs/paper-ko.pdf](docs/paper-ko.pdf)
+- English paper PDF: [docs/paper-en.pdf](docs/paper-en.pdf)
 - Browser demo: [demo/](demo/)
 - HTML presentation: [presentation/](presentation/)
 - Reproducibility manifest: [repro/run-manifest.md](repro/run-manifest.md)

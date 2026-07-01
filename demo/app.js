@@ -3,6 +3,15 @@
   const $ = (id) => document.getElementById(id);
   const playerById = new Map(DATA.players.map((player) => [player.id, player]));
   const iconPath = (name) => `assets/icons/${name}.png`;
+  const PLAYER_STAGE_POSITIONS = {
+    seoyeon: { x: 320, y: 246 },
+    jiho: { x: 635, y: 246 },
+    sua: { x: 228, y: 346 },
+    minjun: { x: 480, y: 330 },
+    doyoon: { x: 730, y: 344 },
+    junseo: { x: 358, y: 405 },
+    haeun: { x: 602, y: 405 }
+  };
 
   const state = {
     source: "real",
@@ -145,6 +154,10 @@
 
   function playerName(id) {
     return playerById.get(id)?.name || id;
+  }
+
+  function getPlayerStagePosition(player) {
+    return PLAYER_STAGE_POSITIONS[player.id] || { x: player.x, y: player.y };
   }
 
   function getTimeline() {
@@ -781,9 +794,13 @@
     }
 
     createPlayer(player) {
-      const shadow = this.add.ellipse(player.x, player.y + 38, 54, 18, 0x111111, 0.28);
-      const sprite = this.add.image(player.x, player.y, `player-${player.id}`);
-      sprite.setScale(0.68);
+      const pos = getPlayerStagePosition(player);
+      const shadow = this.add.ellipse(pos.x, pos.y + 40, 70, 22, 0x111111, 0.42);
+      shadow.setStrokeStyle(2, 0xf2bc57, 0.14);
+      shadow.setDepth(8);
+      const sprite = this.add.image(pos.x, pos.y, `player-${player.id}`);
+      sprite.setScale(0.72);
+      sprite.setDepth(12);
       sprite.setInteractive({ useHandCursor: true });
       sprite.on("pointerdown", () => {
         state.selected = player.id;
@@ -792,25 +809,27 @@
       });
 
       const roleText = this.add
-        .text(player.x, player.y - 67, "", {
+        .text(pos.x, pos.y - 67, "", {
           fontFamily: '"Apple SD Gothic Neo", sans-serif',
           fontSize: "12px",
           color: "#fff7df",
           backgroundColor: "rgba(20,23,24,0.72)",
           padding: { x: 5, y: 3 }
         })
-        .setOrigin(0.5);
+        .setOrigin(0.5)
+        .setDepth(16);
       const nameText = this.add
-        .text(player.x, player.y + 55, player.name, {
+        .text(pos.x, pos.y + 55, player.name, {
           fontFamily: '"Apple SD Gothic Neo", sans-serif',
           fontSize: "14px",
           color: "#f6f2e8",
           stroke: "#171b1e",
           strokeThickness: 4
         })
-        .setOrigin(0.5);
-      const barBack = this.add.rectangle(player.x, player.y + 72, 48, 5, 0x141718, 0.7).setOrigin(0.5);
-      const bar = this.add.rectangle(player.x - 24, player.y + 72, 1, 5, 0xf2bc57, 1).setOrigin(0, 0.5);
+        .setOrigin(0.5)
+        .setDepth(16);
+      const barBack = this.add.rectangle(pos.x, pos.y + 72, 48, 5, 0x141718, 0.78).setOrigin(0.5).setDepth(15);
+      const bar = this.add.rectangle(pos.x - 24, pos.y + 72, 1, 5, 0xf2bc57, 1).setOrigin(0, 0.5).setDepth(16);
       const tombstone = this.createTombstone(player);
 
       this.playerSprites.set(player.id, { sprite, shadow, barBack });
@@ -821,7 +840,8 @@
     }
 
     createTombstone(player) {
-      const container = this.add.container(player.x, player.y + 10);
+      const pos = getPlayerStagePosition(player);
+      const container = this.add.container(pos.x, pos.y + 10);
       const stone = this.add.graphics();
       stone.fillStyle(0xd8d1c3, 0.96);
       stone.lineStyle(3, 0x545b5d, 0.95);
@@ -857,11 +877,11 @@
         if (isEliminated) {
           entry.shadow.setFillStyle(0x111111, 0.48);
         } else if (selected) {
-          entry.sprite.setScale(0.72);
+          entry.sprite.setScale(0.76);
           entry.shadow.setFillStyle(0xf2bc57, 0.42);
         } else {
-          entry.sprite.setScale(0.68);
-          entry.shadow.setFillStyle(0x111111, 0.28);
+          entry.sprite.setScale(0.72);
+          entry.shadow.setFillStyle(0x111111, 0.42);
         }
 
         const role = state.view === "presenter" || event.kind === "result" ? getPlayerRole(player) : "???";
@@ -894,9 +914,10 @@
       if (event.kind !== "speech" || !event.speaker) return;
 
       const player = playerById.get(event.speaker);
+      const pos = getPlayerStagePosition(player);
       const width = 304;
-      const x = Phaser.Math.Clamp(player.x - width / 2, 18, 960 - width - 18);
-      const y = Math.max(28, player.y - 158);
+      const x = Phaser.Math.Clamp(pos.x - width / 2, 18, 960 - width - 18);
+      const y = Math.max(28, pos.y - 158);
       const container = this.add.container(x, y);
       const shadow = this.add.graphics();
       const bg = this.add.graphics();
@@ -921,7 +942,7 @@
         wordWrap: { width: width - 24, useAdvancedWrap: true }
       });
       const height = Math.max(100, text.height + 52);
-      const tailX = Phaser.Math.Clamp(player.x - x, 26, width - 26);
+      const tailX = Phaser.Math.Clamp(pos.x - x, 26, width - 26);
       shadow.fillStyle(0x141718, 0.22);
       shadow.fillRoundedRect(4, 5, width, height, 8);
       bg.fillStyle(0xfff2cf, 0.96);
@@ -959,8 +980,9 @@
       };
       event.nightActions.presenter.forEach((action, index) => {
         const actorPlayer = DATA.players.find((player) => action.actor.includes(player.name));
-        const x = actorPlayer ? actorPlayer.x : 330 + index * 92;
-        const y = actorPlayer ? actorPlayer.y - 112 : 176;
+        const actorPos = actorPlayer ? getPlayerStagePosition(actorPlayer) : null;
+        const x = actorPos ? actorPos.x : 330 + index * 92;
+        const y = actorPos ? actorPos.y - 112 : 176;
         const color = colorByIcon[action.icon] || 0xf2bc57;
         g.lineStyle(2, color, 0.4);
         g.lineBetween(x, y + 18, x, y + 72);

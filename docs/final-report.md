@@ -138,7 +138,9 @@ STEP7-O는 메인 성능 결과가 아니라, 실제 LLM 발화 위에 verifier/
 | GitHub repository | https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness |
 | GitHub Pages | https://ljhljh0703-cmd.github.io/ai-npc-social-reasoning-harness/ |
 | 국문 논문 | https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness/blob/main/docs/paper-ko.md |
+| 국문 논문 PDF | https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness/blob/main/docs/paper-ko.pdf |
 | English paper | https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness/blob/main/docs/paper-en.md |
+| English paper PDF | https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness/blob/main/docs/paper-en.pdf |
 
 ## 11. 한계
 

@@ -13,8 +13,8 @@
 
 | 문서 | 링크 | 용도 |
 |---|---|---|
-| 국문 논문 | [docs/paper-ko.md](docs/paper-ko.md) | 최종 국문 논문형 본문 |
-| English paper | [docs/paper-en.md](docs/paper-en.md) | Final English paper candidate |
+| 국문 논문 | [Markdown](docs/paper-ko.md) · [PDF](docs/paper-ko.pdf) | 최종 국문 논문형 본문 |
+| English paper | [Markdown](docs/paper-en.md) · [PDF](docs/paper-en.pdf) | Final English paper candidate |
 | 최종보고서 | [docs/final-report.md](docs/final-report.md) | 제출용 한국어 보고서 |
 | 결과표 | [docs/results-tables.md](docs/results-tables.md) | RT2/RT2.2/RT2.3 결과와 claim gate |
 | 참고문헌 | [docs/references.bib](docs/references.bib) | 공개 BibTeX |
@@ -109,6 +109,8 @@ http://127.0.0.1:5217/presentation/
 ## 스크린샷 / 데모
 
 - Project page: <https://ljhljh0703-cmd.github.io/ai-npc-social-reasoning-harness/>
+- Korean paper PDF: [docs/paper-ko.pdf](docs/paper-ko.pdf)
+- English paper PDF: [docs/paper-en.pdf](docs/paper-en.pdf)
 - Browser demo: [demo/](demo/)
 - HTML presentation: [presentation/](presentation/)
 - Reproducibility manifest: [repro/run-manifest.md](repro/run-manifest.md)
