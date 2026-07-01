@@ -62,6 +62,8 @@ LLM 에이전트 연구는 언어 모델을 정적 텍스트 생성기가 아니
 
 본 연구의 더 직접적인 출발점은 Xu 등(2023/2024)의 Werewolf LLM 연구다. 해당 연구는 7인 늑대인간을 자연어 커뮤니케이션 게임으로 구현하고, 동결 LLM에 과거 대화 retrieval, reflection, experience 기반 suggestion을 결합해 trust, confrontation, camouflage, leadership 같은 전략 행동이 관찰될 수 있음을 보였다 [@xu2023werewolfllm]. 본 연구는 이 문제의식에서 직접적인 영감을 받았다. 다만 원저자 공개 코드나 구현체를 사용하지 않고, 논문 서술에서 얻은 문제 설정을 바탕으로 별도의 하네스와 데모를 독립 구현했다. 또한 experience pool 자체를 확장하는 대신, 인문학 기반 스캐폴드와 seed 고정 비교, raw/display 경계, 출력 품질 gate를 전면에 둔다.
 
+이 차이는 본 연구의 문제 설정과 직접 연결된다. 선행 연구가 communication retrieval, reflection, experience suggestion처럼 LLM에게 어떤 사고 단서를 줄 것인가에 초점을 둔다면, 본 연구는 그러한 prompt-level 개입이 실제 사회추론 행동으로 이어졌는지를 어떻게 반복 가능하게 검증할 것인가에 초점을 둔다. 즉, 본 연구의 핵심 보완점은 더 정교한 prompt 자체가 아니라 seed 고정 실행, raw run 보존, 지표 분리, 출력 품질 gate, claim gate를 묶은 평가 하네스다.
+
 추론 스캐폴드 연구도 본 연구의 배경이다. Chain-of-thought prompting은 구조화된 중간 추론이 일부 추론 과제의 성능을 높일 수 있음을 보였다 [@wei2022chain]. ReAct는 reasoning과 action을 결합해 상호작용 행동을 구성한다 [@yao2023react]. Reflexion은 language agent의 언어적 자기반성을 다룬다 [@shinn2023reflexion]. 본 연구의 스캐폴드는 더 좁다. 공개 대화에 private chain-of-thought를 노출하지 않고, 숨은 정답도 제공하지 않는다. 대신 공개 사회적 단서, 즉 발화, 여론 흐름, 수혜자, 후속 질문에 주의를 구조화한다.
 
 사회심리학과 게임이론은 해석 어휘를 제공한다. 동조 연구는 공개 동의 압력을 관찰해야 하는 이유를 제공한다 [@asch1956conformity]. Groupthink와 group polarization은 성급한 합의와 의혹 집중을 주의해야 하는 배경을 제공한다 [@janis1972groupthink; @myers1976grouppolarization]. Cheap talk 이론은 숨은 역할 게임의 공개 발화를 전략적이고 신뢰 불완전한 정보로 다루는 이유를 제공한다 [@crawford1982strategic]. 이 문헌들은 proxy 설계의 배경으로만 사용되며, LLM NPC가 인간 심리 상태를 가진다는 증거로 사용하지 않는다.
@@ -174,6 +176,8 @@ STEP7-O는 메인 성능 실험이 아니라, 실제 LLM 발화 위에 verifier/
 동시에 결과는 제한적이다. 스캐폴드는 사전 정의한 역할추론 gate를 넘지 못했다. 관찰된 delta는 작고, N=20은 강한 결론을 내리기에는 부족하다. 한 개의 replay는 개입이 실제보다 더 결정적으로 보이게 만들 수 있으므로, 대표 replay는 설명용으로만 남겨야 한다.
 
 방법론적으로 중요한 점은 LLM NPC 평가에서 세 계층을 하나의 인상으로 합치지 않는 것이다. 그럴듯한 transcript는 성능 지표가 아니다. sanitized transcript는 raw 근거가 아니다. 심리학에서 영감을 받은 스캐폴드는 인간형 인지의 증거가 아니다. 본 하네스는 이 경계를 명시하고 검증 가능하게 만든다.
+
+따라서 본 연구는 prompt 설계 경쟁으로만 문제를 풀려는 접근에서 한 걸음 물러난다. 프롬프트가 추론을 유도할 수는 있지만, 그 효과는 같은 seed에서 반복 실행되고 raw 행동 지표와 품질 지표로 분해될 때에만 연구 claim으로 다룰 수 있다. 이 점에서 본 연구의 중심 산출물은 개별 prompt recipe가 아니라, prompt나 scaffold의 효과를 보수적으로 시험할 수 있는 하네스다.
 
 STEP7-O도 같은 결론을 보강한다. 품질 누출을 줄이고 발화 다양성을 유지하는 것은 가능했지만, 그 자체가 승률이나 역할추론 개선으로 이어지지는 않았다. 품질 통제는 성능 개선의 대체물이 아니라, 성능 지표를 해석하기 위한 전제 조건이다.
 

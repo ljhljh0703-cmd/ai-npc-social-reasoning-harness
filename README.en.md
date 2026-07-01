@@ -38,6 +38,7 @@ The project is directly motivated by Xu et al.'s Werewolf LLM study. That work i
 
 - **Humanities-grounded interdisciplinary scaffold** — Structures utterance analysis, public-opinion analysis, beneficiary analysis, and interrogation strategy as a public reasoning frame for NPCs.
 - **Seed-controlled Werewolf evaluation harness** — Compares baseline and scaffold arms under the same seeds and the same 7-player role setup.
+- **Prompt-effect verification focus** — Treats the main artifact as a harness for repeatedly testing whether prompts or scaffolds change behavior, rather than as a more elaborate prompt recipe.
 - **Raw/display boundary and claim gate** — Separates raw performance metrics from display-level sanitized artifacts and withholds strong performance claims because the strong gate was not passed.
 
 ## Current Stage and Next Stage
