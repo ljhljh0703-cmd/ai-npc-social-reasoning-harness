@@ -1,316 +1,374 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Can an AI Taught the Humanities Reason Better in a Game of Deception?</title>
-    <meta
-      name="description"
-      content="A controlled Werewolf game harness for evaluating social reasoning in LLM NPCs under output-quality control."
-    />
-    <style>
-      :root {
-        color-scheme: light;
-        --ink: #1d2328;
-        --muted: #5f6872;
-        --line: #d9dee3;
-        --paper: #f7f4ef;
-        --panel: #ffffff;
-        --accent: #2d6a62;
-        --accent-2: #9b4a3c;
-      }
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인문학을 학습한 AI는 늑대인간 게임에서 더 잘 추리할까 · 포트폴리오</title>
+<meta name="description" content="LLM NPC의 사회적 추론을 검증하기 위한 seed 고정 늑대인간 평가 하네스. 인문학 기반 학제적 스캐폴드의 효과를 출력 품질 통제 하에서 탐색한 연구.">
+<meta property="og:title" content="인문학을 학습한 AI는 늑대인간 게임에서 더 잘 추리할까">
+<meta property="og:description" content="seed 고정 늑대인간 평가 하네스 · 인문학 스캐폴드 · raw/display 분리 · 보수적 claim gate (탐색적).">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0b0b0c; --ink-2:#26262a; --muted:#73737b; --faint:#9a9aa1;
+    --line:#e6e5e2; --line-2:#cfcec9;
+    --paper:#fff; --paper-2:#f7f6f3; --paper-3:#efeee9;
+    --accent:#2348b5; --accent-2:#16306f; --accent-soft:#e7ebf8;
+    --r:14px; --maxw:1080px;
+    --mono:'JetBrains Mono',ui-monospace,Menlo,monospace;
+    --sans:'IBM Plex Sans KR',system-ui,-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans); color:var(--ink); background:var(--paper); line-height:1.7; font-weight:400; -webkit-font-smoothing:antialiased; overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+  h1,h2,h3{word-break:keep-all;letter-spacing:-.02em;line-height:1.2;font-weight:600}
+  p{overflow-wrap:anywhere}
+  a{color:inherit}
+  .mono{font-family:var(--mono);font-feature-settings:"tnum"}
 
-      * {
-        box-sizing: border-box;
-      }
+  #progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:50;transition:width .1s linear}
+  nav{position:sticky;top:0;z-index:40;backdrop-filter:saturate(160%) blur(12px);background:rgba(255,255,255,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-weight:700;letter-spacing:-.02em;font-size:1.02rem;display:flex;align-items:center;gap:9px}
+  .brand .dot{width:9px;height:9px;border-radius:3px;background:var(--accent)}
+  .nav-gh{font-family:var(--mono);font-size:.78rem;font-weight:500;text-decoration:none;border:1px solid var(--ink);color:var(--ink);padding:8px 14px;border-radius:9px;transition:.18s}
+  .nav-gh:hover{background:var(--ink);color:#fff}
 
-      body {
-        margin: 0;
-        background: var(--paper);
-        color: var(--ink);
-        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        line-height: 1.6;
-      }
+  header.hero{padding:clamp(56px,10vw,116px) 0 clamp(36px,6vw,64px)}
+  .eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-2);font-weight:600}
+  h1{font-size:clamp(1.8rem,4.4vw,3.05rem);margin:18px 0 0}
+  .sub{font-size:clamp(1.02rem,1.8vw,1.28rem);color:var(--ink-2);max-width:44ch;margin-top:20px;font-weight:400}
+  .kotitle{font-family:var(--mono);font-size:.82rem;color:var(--muted);margin-top:12px}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .chip{font-family:var(--mono);font-size:.72rem;border:1px solid var(--line-2);border-radius:999px;padding:6px 12px;color:var(--muted);background:var(--paper-2)}
+  .chip.on{border-color:var(--accent);color:var(--accent-2);background:var(--accent-soft)}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .btn{font-family:var(--mono);font-size:.8rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;min-height:42px;padding:0 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;transition:.18s}
+  .btn.sec{background:transparent;color:var(--accent-2)}
+  .btn:hover{transform:translateY(-1px)}
 
-      a {
-        color: var(--accent);
-      }
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:36px}
+  .stat{border:1px solid var(--line);border-radius:var(--r);padding:20px 18px;background:var(--paper)}
+  .stat.win{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .stat .v{font-family:var(--mono);font-size:1.5rem;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+  .stat.win .v{color:#fff}
+  .stat .k{font-size:.82rem;color:var(--muted);margin-top:8px;font-weight:500}
+  .stat.win .k{color:#cfcfd4}
+  .stat .s{font-size:.72rem;color:var(--faint);margin-top:6px;font-family:var(--mono)}
+  .stat.win .s{color:#9a9aa1}
 
-      .page {
-        max-width: 1120px;
-        margin: 0 auto;
-        padding: 48px 24px 64px;
-      }
+  section.block{padding:clamp(52px,8vw,100px) 0;border-top:1px solid var(--line)}
+  .secnum{font-family:var(--mono);font-size:.78rem;color:var(--faint);letter-spacing:.1em}
+  h2{font-size:clamp(1.35rem,3vw,2rem);margin:10px 0 0}
+  .intro{max-width:64ch;color:var(--ink-2);margin-top:16px;font-size:1.03rem}
 
-      header {
-        border-bottom: 1px solid var(--line);
-        padding-bottom: 32px;
-      }
+  .video-embed{position:relative;width:100%;padding-bottom:56.25%;height:0;border-radius:var(--r);overflow:hidden;border:1px solid var(--line-2);background:#000;margin-top:26px}
+  .video-embed iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
 
-      .eyebrow {
-        margin: 0 0 12px;
-        color: var(--accent-2);
-        font-size: 0.84rem;
-        font-weight: 700;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-      }
+  .figure{border:1px solid var(--line);border-radius:var(--r);overflow-x:auto;background:var(--paper-2);margin-top:28px}
+  .figure svg{display:block;min-width:740px;width:100%}
+  .fcap{font-size:.82rem;color:var(--muted);margin-top:10px;font-family:var(--mono)}
 
-      h1 {
-        max-width: 920px;
-        margin: 0;
-        font-size: clamp(2.15rem, 5vw, 4.8rem);
-        line-height: 1.02;
-        letter-spacing: 0;
-      }
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:30px}
+  .card{border:1px solid var(--line);border-radius:var(--r);padding:22px;background:var(--paper);transition:.2s}
+  .card:hover{border-color:var(--line-2);box-shadow:0 18px 40px -28px rgba(0,0,0,.25)}
+  .lab{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-2);font-weight:600}
+  .card h3{font-size:1.02rem;margin:10px 0 8px}
+  .card p{font-size:.93rem;color:var(--ink-2)}
+  .card .mis{font-size:.8rem;color:var(--muted);margin-top:10px;border-top:1px dashed var(--line-2);padding-top:8px}
 
-      .subtitle {
-        max-width: 850px;
-        margin: 18px 0 0;
-        color: var(--muted);
-        font-size: 1.18rem;
-      }
+  table{width:100%;border-collapse:collapse;margin-top:24px;font-size:.92rem}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line)}
+  th{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+  td.v{font-family:var(--mono);font-feature-settings:"tnum"}
+  tr.hl td{background:var(--accent-soft)}
 
-      .korean-title {
-        max-width: 850px;
-        margin: 16px 0 0;
-        color: #384047;
-        font-size: 1rem;
-      }
+  .pill{font-family:var(--mono);font-size:.72rem;font-weight:600;padding:3px 9px;border-radius:999px}
+  .pill.ok{background:#e7f1ea;color:#1f6b43}
+  .pill.gate{background:#fff3da;color:#8a6a14}
 
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 28px;
-      }
+  .note{border-left:3px solid var(--line-2);padding:6px 0 6px 16px;color:var(--muted);margin-top:16px;font-size:.92rem}
+  .limits li{list-style:none;padding:12px 0;border-bottom:1px solid var(--line);display:flex;gap:12px;align-items:baseline;font-size:.95rem;color:var(--ink-2)}
+  .ltag{font-family:var(--mono);font-size:.68rem;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap;background:var(--paper-3);color:var(--ink-2)}
+  .ltag.m{background:#fff3da;color:#8a6a14}
 
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 42px;
-        padding: 0 16px;
-        border: 1px solid var(--accent);
-        border-radius: 6px;
-        background: var(--accent);
-        color: #fff;
-        font-weight: 700;
-        text-decoration: none;
-      }
+  .arts{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 20px;margin-top:22px}
+  .arts a{font-family:var(--mono);font-size:.86rem;color:var(--accent-2);text-decoration:none;padding:8px 0;border-bottom:1px solid var(--line);display:block}
+  .arts a:hover{color:var(--accent)}
 
-      .button.secondary {
-        background: transparent;
-        color: var(--accent);
-      }
+  .gloss{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:26px}
+  .gloss div{border-left:2px solid var(--accent);padding:4px 0 4px 14px}
+  .gloss b{font-family:var(--mono);font-size:.86rem}
+  .gloss span{display:block;font-size:.9rem;color:var(--muted);margin-top:3px}
 
-      main {
-        display: grid;
-        grid-template-columns: minmax(0, 1.5fr) minmax(280px, 0.8fr);
-        gap: 28px;
-        margin-top: 32px;
-      }
+  .closing{background:var(--ink);color:#fff;padding:clamp(56px,9vw,104px) 0}
+  .closing h2{color:#fff;font-size:clamp(1.5rem,3.4vw,2.25rem)}
+  .closing p{color:#cfcfd4;max-width:56ch;margin-top:16px}
+  .cta{display:inline-flex;align-items:center;gap:9px;margin-top:28px;font-family:var(--mono);font-size:.86rem;font-weight:600;background:#fff;color:var(--ink);text-decoration:none;padding:13px 22px;border-radius:11px;transition:.2s}
+  .cta:hover{transform:translateY(-2px)}
+  footer{padding:40px 0;text-align:center;color:var(--faint);font-size:.82rem;font-family:var(--mono)}
+  footer .nm{color:var(--ink-2);font-weight:600}
 
-      section,
-      aside {
-        min-width: 0;
-      }
+  .rv{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+  .rv.in{opacity:1;transform:none}
 
-      .panel {
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        background: var(--panel);
-        padding: 22px;
-      }
+  @media (max-width:760px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .grid,.gloss,.arts{grid-template-columns:1fr}
+    .sub{max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.rv{opacity:1;transform:none;transition:none}.btn:hover,.cta:hover{transform:none}}
+  @media print{nav,#progress,body::before{display:none}.closing{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div id="progress"></div>
 
-      h2 {
-        margin: 0 0 12px;
-        font-size: 1.2rem;
-      }
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span>사회추론 하네스</div>
+    <a class="nav-gh" href="https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness" target="_blank" rel="noopener">GitHub ↗</a>
+  </div>
+</nav>
 
-      p {
-        margin: 0 0 14px;
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 0.95rem;
-      }
-
-      th,
-      td {
-        border-bottom: 1px solid var(--line);
-        padding: 10px 8px;
-        text-align: left;
-        vertical-align: top;
-      }
-
-      th {
-        color: #384047;
-        font-size: 0.82rem;
-        text-transform: uppercase;
-      }
-
-      .metric {
-        font-variant-numeric: tabular-nums;
-        white-space: nowrap;
-      }
-
-      .note {
-        color: var(--muted);
-        font-size: 0.94rem;
-      }
-
-      .stack {
-        display: grid;
-        gap: 16px;
-      }
-
-      .claim {
-        border-left: 4px solid var(--accent-2);
-        padding-left: 14px;
-      }
-
-      footer {
-        margin-top: 32px;
-        border-top: 1px solid var(--line);
-        padding-top: 20px;
-        color: var(--muted);
-        font-size: 0.92rem;
-      }
-
-      @media (max-width: 820px) {
-        .page {
-          padding: 32px 18px 48px;
-        }
-
-        main {
-          grid-template-columns: 1fr;
-        }
-
-        h1 {
-          font-size: 2.3rem;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <div class="page">
-      <header>
-        <p class="eyebrow">LLM NPC social reasoning harness</p>
-        <h1>Can an AI Taught the Humanities Reason Better in a Game of Deception?</h1>
-        <p class="subtitle">A humanities-grounded interdisciplinary scaffold, evaluated in a seed-controlled Werewolf harness under output-quality control (exploratory).</p>
-        <p class="korean-title">인문학을 학습한 AI는 늑대인간 게임에서 더 잘 추리할까</p>
-        <div class="actions">
-          <a class="button" href="presentation/">Open HTML Presentation</a>
-          <a class="button secondary" href="demo/">Open Demo</a>
-          <a class="button secondary" href="https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness">GitHub Repository</a>
-        </div>
-      </header>
-
-      <main>
-        <section class="stack">
-          <div class="panel">
-            <h2>Abstract</h2>
-            <p>
-              This project presents a seed-controlled 7-player Werewolf harness for evaluating observable
-              social-reasoning behavior in LLM NPCs. The harness separates raw game-performance metrics from
-              display-level output hygiene, then compares a baseline condition with a village-side interdisciplinary
-              scaffold.
-            </p>
-            <p>
-              In STEP7-M RT2.3 N=20, the scaffold arm preserved raw quality pass 20/20 and replacements 0 while
-              showing positive but small deltas in village win rate, role inference, vote consistency, and duration.
-            </p>
-          </div>
-
-          <div class="panel">
-            <h2>Final RT2.3 N=20 Result</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>Arm</th>
-                  <th>N</th>
-                  <th>Village win</th>
-                  <th>Role inference</th>
-                  <th>Vote consistency</th>
-                  <th>Quality pass</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Baseline</td>
-                  <td class="metric">20</td>
-                  <td class="metric">0.200</td>
-                  <td class="metric">0.317</td>
-                  <td class="metric">0.334</td>
-                  <td class="metric">20/20</td>
-                </tr>
-                <tr>
-                  <td>Village scaffold</td>
-                  <td class="metric">20</td>
-                  <td class="metric">0.300</td>
-                  <td class="metric">0.383</td>
-                  <td class="metric">0.353</td>
-                  <td class="metric">20/20</td>
-                </tr>
-                <tr>
-                  <td>Delta</td>
-                  <td class="metric">-</td>
-                  <td class="metric">+0.100</td>
-                  <td class="metric">+0.066</td>
-                  <td class="metric">+0.019</td>
-                  <td class="metric">+0</td>
-                </tr>
-              </tbody>
-            </table>
-            <p class="note">
-              The result is exploratory. The role-inference delta does not reach the pre-defined +0.10 strong-claim gate.
-            </p>
-          </div>
-
-          <div class="panel">
-            <h2>Claim Boundary</h2>
-            <p class="claim">
-              Allowed: under output-quality control, the village scaffold showed exploratory positive trends in
-              observable Werewolf behavior. Not allowed: statistical significance, general superiority, or human-level
-              social reasoning.
-            </p>
-          </div>
-        </section>
-
-        <aside class="stack">
-          <div class="panel">
-            <h2>Artifacts</h2>
-            <p><a href="docs/paper-ko.md">Korean paper</a></p>
-            <p><a href="docs/paper-ko.pdf">Korean paper PDF</a></p>
-            <p><a href="docs/paper-en.md">English paper</a></p>
-            <p><a href="docs/paper-en.pdf">English paper PDF</a></p>
-            <p><a href="docs/final-report.md">Final report</a></p>
-            <p><a href="docs/results-tables.md">Result tables</a></p>
-            <p><a href="demo/report.html">Demo report</a></p>
-            <p><a href="repro/run-manifest.md">Run manifest</a></p>
-          </div>
-
-          <div class="panel">
-            <h2>Scaffold Axes</h2>
-            <p>발화 분석: contradiction, evasion, inconsistency.</p>
-            <p>여론 분석: bandwagoning, pressure, scapegoating.</p>
-            <p>수혜자 분석: who benefits from a vote or silence.</p>
-            <p>심문 전략: follow-up questions and delayed judgment.</p>
-          </div>
-
-          <div class="panel">
-            <h2>License</h2>
-            <p class="note">Code: MIT. Reports, presentation, docs, and assets: CC BY-NC 4.0.</p>
-          </div>
-        </aside>
-      </main>
-
-      <footer>
-        Public export. Original run archives, private session logs, and internal progress files are not bundled.
-      </footer>
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">LLM NPC · 사회추론 평가 하네스</div>
+    <h1>인문학을 학습한 AI는<br>늑대인간 게임에서 더 잘 추리할까</h1>
+    <p class="sub">유창한 대화가 곧 추론은 아닙니다. 7인 늑대인간을 <b>seed 고정 평가 하네스</b>로 만들고, 인문학 기반 스캐폴드가 실제 행동 지표에 미치는 영향을 통제된 조건에서 측정했습니다.</p>
+    <p class="kotitle">A humanities-grounded interdisciplinary scaffold, evaluated in a seed-controlled Werewolf harness under output-quality control (exploratory).</p>
+    <div class="meta">
+      <span class="chip on">탐색적 연구 · N=20</span>
+      <span class="chip">seed 고정 재현</span>
+      <span class="chip">raw / display 분리</span>
+      <span class="chip">보수적 claim gate</span>
+      <span class="chip">clean-room</span>
     </div>
-  </body>
+    <div class="actions">
+      <a class="btn" href="https://youtu.be/y9B8eaJFE3g" target="_blank" rel="noopener">▶ 데모 영상</a>
+      <a class="btn sec" href="demo/">인터랙티브 데모</a>
+      <a class="btn sec" href="presentation/">발표 자료</a>
+      <a class="btn sec" href="docs/paper-ko.pdf">국문 논문 PDF</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat rv"><div class="v">N=20</div><div class="k">arm당 반복 실행</div><div class="s">baseline · scaffold 비교</div></div>
+      <div class="stat win rv"><div class="v">20 / 20</div><div class="k">raw 출력 품질통과</div><div class="s">replacements 0 · 통제됨</div></div>
+      <div class="stat rv"><div class="v">gate 미달</div><div class="k">역할추론 +0.066</div><div class="s">사전 +0.10 강주장 gate</div></div>
+      <div class="stat rv"><div class="v">재현 ✓</div><div class="k">seed 고정 결정론</div><div class="s">같은 seed·조건 반복</div></div>
+    </div>
+  </div>
+</header>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">데모</div>
+    <h2>영상으로 먼저 보기</h2>
+    <p class="intro">하네스와 마을 진영 스캐폴드가 실제로 어떻게 도는지 시연입니다. 브라우저 인터랙티브 데모는 redacted replay 기반이라 실험 성능 근거가 아니라 <b>설명용</b>입니다.</p>
+    <div class="video-embed">
+      <iframe src="https://www.youtube.com/embed/y9B8eaJFE3g" title="데모 영상 — seed 고정 늑대인간 평가 하네스" loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">01 — 문제</div>
+    <h2>그럴듯한 대화가 곧 추론은 아니다</h2>
+    <p class="intro">LLM NPC는 속으론 판단이 약해도 사회적으로 풍부한 대화를 만들어냅니다. transcript가 멀쩡해 보여도, 정작 자기 증거에 반대로 투표하거나 무고한 대상에 의혹을 몰아준다면 "사회추론을 한다"고 말하기 어렵습니다. 이 간극을 어떻게 <b>반복 가능하게</b> 검증할지가 이 프로젝트의 질문입니다.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">02 — 접근</div>
+    <h2>늑대인간을 불완전정보 테스트베드로</h2>
+    <p class="intro">7인 늑대인간(늑대 2·시민 2·예언자·가드·마녀)은 비대칭 정보·공개 발화·기만·집단 투표를 한 판에 담습니다. 덕분에 "사회적 대화"가 <b>감사 가능한 행동 결과</b>로 바뀝니다 — 누가 의심받았고, 누구에게 투표했고, 처형된 게 진짜 늑대였고, 마을이 이겼는지. 같은 seed·조건에서 baseline과 scaffold arm을 반복 실행해 비교합니다(모델 <span class="mono">llama3.1:8b</span>).</p>
+    <div class="figure">
+      <svg viewBox="0 0 860 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="seed 고정 늑대인간 평가 하네스">
+        <defs>
+          <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2348b5"/></marker>
+        </defs>
+        <g font-family="IBM Plex Sans KR,sans-serif">
+          <rect x="18" y="66" width="150" height="120" rx="11" fill="#fff" stroke="#cfcec9"/>
+          <text x="32" y="92" font-family="JetBrains Mono,monospace" font-size="11" fill="#16306f">seed 고정</text>
+          <text x="32" y="116" font-size="13" fill="#0b0b0c">7인 늑대인간</text>
+          <text x="32" y="136" font-size="12" fill="#26262a">역할·밤·낮 토론</text>
+          <text x="32" y="154" font-size="12" fill="#26262a">투표·처형·승패</text>
+
+          <rect x="196" y="46" width="176" height="72" rx="11" fill="#fff" stroke="#cfcec9"/>
+          <text x="210" y="72" font-family="JetBrains Mono,monospace" font-size="11" fill="#73737b">baseline arm</text>
+          <text x="210" y="96" font-size="12" fill="#0b0b0c">스캐폴드 없음</text>
+
+          <rect x="196" y="134" width="176" height="72" rx="11" fill="#eef2fb" stroke="#2348b5"/>
+          <text x="210" y="160" font-family="JetBrains Mono,monospace" font-size="11" fill="#16306f">scaffold arm</text>
+          <text x="210" y="184" font-size="12" fill="#0b0b0c">인문학 4축 주입</text>
+
+          <rect x="400" y="66" width="164" height="120" rx="11" fill="#fff" stroke="#cfcec9"/>
+          <text x="414" y="92" font-family="JetBrains Mono,monospace" font-size="11" fill="#16306f">raw 로그</text>
+          <text x="414" y="116" font-size="12" fill="#26262a">승률 · 역할추론</text>
+          <text x="414" y="136" font-size="12" fill="#26262a">투표정합성 · 지속일</text>
+          <text x="414" y="158" font-size="11" fill="#73737b">display와 분리</text>
+
+          <rect x="592" y="66" width="150" height="120" rx="11" fill="#0b0b0c" stroke="#0b0b0c"/>
+          <text x="606" y="92" font-family="JetBrains Mono,monospace" font-size="11" fill="#a8c2ff">claim gate</text>
+          <text x="606" y="116" font-size="12" fill="#fff">허용 주장만</text>
+          <text x="606" y="136" font-size="11" fill="#cfcfd4">강주장 차단</text>
+          <text x="606" y="158" font-size="11" fill="#cfcfd4">(+0.10 gate)</text>
+        </g>
+        <line x1="168" y1="120" x2="192" y2="96" stroke="#2348b5" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="168" y1="132" x2="192" y2="160" stroke="#2348b5" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="372" y1="96" x2="396" y2="116" stroke="#2348b5" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="372" y1="170" x2="396" y2="140" stroke="#2348b5" stroke-width="1.5" marker-end="url(#ar)"/>
+        <line x1="564" y1="126" x2="588" y2="126" stroke="#2348b5" stroke-width="1.6" marker-end="url(#ar)"/>
+      </svg>
+    </div>
+    <div class="fcap">출처: 논문 §3 방법 · repro/configs (full-step7m-rt23 / full-village-scaffold-step7m-rt23) · N=20.</div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">03 — 스캐폴드</div>
+    <h2>인문학을 검증 가능한 4축으로 번역</h2>
+    <p class="intro">스캐폴드는 숨은 역할이나 정답을 알려주지 않습니다. 공개 단서에 <b>주의를 구조화</b>하는 네 축입니다. 각 축은 "인간형 인지의 증거"가 아니라 <b>관찰 가능한 proxy</b>로만 연결합니다 — 이 경계가 이 연구의 핵심입니다.</p>
+    <div class="grid">
+      <div class="card"><div class="lab">발화 분석</div><h3>모순·회피·과확신</h3><p>공개 발화 사이의 모순, 책임 회피, 과도한 확신, 서사 붕괴를 추적.</p><div class="mis">proxy: contradiction·evasion label. ✗ 모델이 인간처럼 모순을 "이해"했다는 뜻 아님.</div></div>
+      <div class="card"><div class="lab">여론 분석</div><h3>몰아가기·동조 압력</h3><p>의심이 어떻게 이동하는지, 공개 동의가 너무 빨리 한쪽으로 쏠리는지 추적.</p><div class="mis">proxy: bandwagon·accusation concentration. ✗ 인간 동조·집단극화 재현이 아님.</div></div>
+      <div class="card"><div class="lab">수혜자 분석</div><h3>누가 이득을 보나</h3><p>특정 처형·침묵·의혹 전이에서 어떤 역할이 이익을 얻는지 질문.</p><div class="mis">proxy: wolf-benefiting vote label. ✗ 게임이론적 균형 구현이 아님.</div></div>
+      <div class="card"><div class="lab">심문 전략</div><h3>판단 유예·후속 질문</h3><p>즉시 확신하기보다 질문하고, 판단을 미루고, 단서 뒤 후속 확인을 유도.</p><div class="mis">proxy: question count·deferred vote. ✗ 인간 수준 심문 능력 주장 아님.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">04 — 방법론 핵심</div>
+    <h2>raw 성능과 display 위생을 분리한다</h2>
+    <p class="intro">정제된 공개 문구가 <b>원본 성능 근거로 오해되지 않게</b>, 세 계층을 하나의 인상으로 합치지 않습니다. 그럴듯한 transcript는 성능 지표가 아니고, sanitized transcript는 raw 근거가 아니며, 심리학에서 영감받은 스캐폴드는 인간형 인지의 증거가 아닙니다. raw 지표는 원본 run에서만 계산하고, 표시 계층 치환은 성능을 재계산하지 않습니다.</p>
+    <table>
+      <thead><tr><th>계층</th><th>무엇</th><th>지위</th></tr></thead>
+      <tbody>
+        <tr><td>raw 게임 성능</td><td>승패·처형·투표·지속일</td><td><span class="pill ok">연구 근거</span></td></tr>
+        <tr><td>output-quality gate</td><td>출력 위생 통과·치환 수</td><td><span class="pill ok">통제 변수</span></td></tr>
+        <tr class="hl"><td>sanitized replay</td><td>공개 데모 표시용</td><td><span class="pill gate">설명용 · 성능 아님</span></td></tr>
+        <tr><td>claim gate</td><td>강주장 사전 차단</td><td><span class="pill ok">허용 주장만</span></td></tr>
+      </tbody>
+    </table>
+    <div class="note">RT2.3 N=20에서 두 arm 모두 raw 품질통과 <b>20/20 · replacements 0</b>. 출력 품질이 통제됐다는 뜻이지, 그 자체가 추론 개선의 증거는 아닙니다.</div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">05 — 결과</div>
+    <h2>양의 방향, 그러나 작다 (탐색적)</h2>
+    <p class="intro">최종 STEP7-M RT2.3 N=20에서 scaffold arm은 모든 지표에서 양의 방향을 보였지만 효과크기가 작고, 역할추론 delta는 사전 정의한 강주장 gate에 도달하지 못했습니다. 그래서 "개선 확정"이 아니라 <b>탐색적 경향</b>으로만 해석합니다.</p>
+    <table>
+      <thead><tr><th>지표</th><th>baseline</th><th>scaffold</th><th>delta</th></tr></thead>
+      <tbody>
+        <tr><td>마을 승률</td><td class="v">0.200</td><td class="v">0.300</td><td class="v">+0.100</td></tr>
+        <tr class="hl"><td>역할추론</td><td class="v">0.317</td><td class="v">0.383</td><td class="v">+0.066 · gate 미달</td></tr>
+        <tr><td>투표정합성</td><td class="v">0.334</td><td class="v">0.353</td><td class="v">+0.019</td></tr>
+        <tr><td>평균 지속일</td><td class="v">2.000</td><td class="v">2.150</td><td class="v">+0.150</td></tr>
+        <tr><td>raw 품질통과</td><td class="v">20/20</td><td class="v">20/20</td><td class="v">동일</td></tr>
+      </tbody>
+    </table>
+    <div class="note">근사 효과크기 역할추론 d≈0.17 · 투표정합성 d≈0.08 · 지속일 d≈0.23 — 양의 방향과는 양립하나 강한 결론과는 양립하지 않음. 마을승률 불확실성 구간은 0을 포함. 출처: 논문 §5.</div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">06 — 대표 사례</div>
+    <h2>seed 58 — 설명용, 집계 근거 아님</h2>
+    <p class="intro">scaffold arm에서 마을이 2일 만에 승리(역할추론 1.000·투표정합성 0.750·늑대 2회 정확 처형). 같은 seed에서 baseline은 첫 처형은 늑대였지만 이후 예언자를 처형해 늑대 승리로 끝났습니다. 스캐폴드가 한 게임 흐름을 어떻게 바꾸는지 <b>설명하는 데만</b> 씁니다 — 성능 claim은 오직 N=20 표에 근거합니다.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">07 — 차별점</div>
+    <h2>더 정교한 프롬프트가 아니라, 평가 하네스</h2>
+    <p class="intro">Xu 등(2023)의 Werewolf LLM 연구에서 <b>문제의식만</b> 이어받았습니다 — 공개 코드나 구현체는 쓰지 않고, 논문 서술에서 얻은 문제 설정으로 하네스와 데모를 독립 구현했습니다. 선행 연구가 "어떤 사고 단서를 줄 것인가"(retrieval·reflection·experience)에 초점을 뒀다면, 이 프로젝트의 보완점은 <b>그 개입이 실제 행동 지표로 이어졌는지를 반복 가능하게 검증하는 장치</b> — seed 고정 실행·raw 보존·지표 분리·output-quality gate·claim gate입니다.</p>
+    <div class="note">정직 표기: 원저자 코드 미사용 · 원 논문 개선 주장 아님(문제의식 계승) · 인용 = Xu et al., "Exploring Large Language Models for Communication Games: An Empirical Study on Werewolf," arXiv 2309.04658.</div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">08 — 정직 · 한계</div>
+    <h2>증명한 것과, 아직 아닌 것</h2>
+    <ul class="limits">
+      <li><span class="ltag m">탐색적</span><span>arm당 N=20은 경향·실패 모드 검토용이지 강한 통계 결론 근거가 아닙니다. 역할추론은 사전 gate(+0.10)를 넘지 못했습니다.</span></li>
+      <li><span class="ltag">단일 설정</span><span>모델 1계열(llama3.1:8b)·게임 설정 1종. 일반화엔 추가 모델·크기·decoding·rule variant 필요.</span></li>
+      <li><span class="ltag">proxy</span><span>역할추론·투표정합성은 감사 가능한 rule-based proxy — 사회추론의 모든 형태를 담지 못합니다. 독립 human annotation·belief-state table은 다음 단계.</span></li>
+      <li><span class="ltag">재현 경계</span><span>공개 repo엔 완전한 raw archive 미포함(redacted replay만). 공개 결과 점검은 되지만 완전 독립 재현엔 한계.</span></li>
+      <li><span class="ltag">clean-room</span><span>내부자 정보·비공개 데이터 없음. 심리학 용어(scapegoating 등)는 분석 label일 뿐 인간 심리 재현 주장 아님.</span></li>
+    </ul>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">산출물</div>
+    <h2>공개 아티팩트</h2>
+    <div class="arts">
+      <a href="docs/paper-ko.pdf">국문 논문 (PDF)</a>
+      <a href="docs/paper-en.pdf">English paper (PDF)</a>
+      <a href="docs/paper-ko.md">국문 논문 (MD)</a>
+      <a href="docs/paper-en.md">English paper (MD)</a>
+      <a href="docs/final-report.md">최종 보고서</a>
+      <a href="docs/results-tables.md">결과 표</a>
+      <a href="demo/">인터랙티브 데모</a>
+      <a href="demo/report.html">데모 리포트</a>
+      <a href="presentation/">발표 자료</a>
+      <a href="repro/run-manifest.md">Run manifest</a>
+    </div>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap rv">
+    <div class="secnum">용어</div>
+    <h2>용어 해설</h2>
+    <div class="gloss">
+      <div><b>평가 하네스</b><span>AI를 같은 조건에서 반복 실행하고 행동을 자동 채점하는 실험 장치.</span></div>
+      <div><b>스캐폴드</b><span>정답을 주지 않고 "어디를 보라"고 추론의 틀만 잡아주는 보조 장치.</span></div>
+      <div><b>seed 고정</b><span>난수를 고정해 같은 상황을 그대로 재현 — 비교가 공정해짐.</span></div>
+      <div><b>output-quality gate</b><span>공개 문장의 위생(누출·형식)을 검사·통제하는 관문. 성능과 분리.</span></div>
+      <div><b>claim gate</b><span>데이터가 지지하지 않는 강한 주장을 미리 막는 규칙.</span></div>
+      <div><b>역할추론 / 투표정합성</b><span>처형이 진짜 늑대였나 / 투표가 늑대를 향했나 — 관찰 가능한 지표.</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <div class="wrap rv">
+    <h2>유창함과 추론을 혼동하지 않는 평가</h2>
+    <p>이 프로젝트의 중심 산출물은 개별 프롬프트가 아니라, 프롬프트·스캐폴드의 효과를 보수적으로 시험하는 하네스입니다. 결과는 탐색적이지만, 무엇을 주장할 수 있고 없는지를 분명히 합니다.</p>
+    <a class="cta" href="https://github.com/ljhljh0703-cmd/ai-npc-social-reasoning-harness" target="_blank" rel="noopener">GitHub에서 전체 보기 ↗</a>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">LLM NPC 사회추론 평가 하네스 &nbsp;·&nbsp; <span class="nm">이주형</span> &nbsp;·&nbsp; 개인 프로젝트 · clean-room · 탐색적 연구</div>
+</footer>
+
+<script>
+  document.body.classList.add('js');
+  var pb=document.getElementById('progress');
+  function prog(){var h=document.documentElement,sc=h.scrollTop||document.body.scrollTop,max=h.scrollHeight-h.clientHeight;pb.style.width=(max>0?(sc/max*100):0)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var rv=document.querySelectorAll('.rv');
+  if(reduce||!('IntersectionObserver' in window)){rv.forEach(function(e){e.classList.add('in')});}
+  else{var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}})},{threshold:.12});rv.forEach(function(e){io.observe(e)});}
+</script>
+</body>
 </html>
